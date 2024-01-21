@@ -1,24 +1,26 @@
 import type { PlasmoCSConfig } from "plasmo"
 
 export const config: PlasmoCSConfig = {
-  matches: ["https://www.plasmo.com/*"]
+  matches: ["https://www.notion.so/*"]
 }
 
 export const getRootContainer = () =>
   new Promise((resolve) => {
     const checkInterval = setInterval(() => {
-      const id = "plasmo-inject"
+      const id = "notion-flink-inject"
       if (document.querySelector(`#${id}`)) {
         clearInterval(checkInterval)
         return
       }
 
-      const root = document.querySelector(`[href="/#pricing"]`)
+      const root = document.querySelector(`#notion-app`)
 
       const mountDiv = document.createElement("div")
-      mountDiv.id = "plasmo-inject"
+      mountDiv.id = "notion-flink-inject"
 
       root?.append(mountDiv)
+
+      console.log("c: ", mountDiv)
 
       clearInterval(checkInterval)
       resolve(mountDiv)
