@@ -1,9 +1,9 @@
 {
   "name": "notion-flink",
-  "displayName": "Notion flink",
+  "displayName": "Notion Flink",
   "version": "0.0.1",
-  "description": "A basic Plasmo extension.",
-  "author": "Plasmo Corp. <foss@plasmo.com>",
+  "description": "Notion Flink Extension",
+  "author": "SengMitnick. <sengmitnick@163.com>",
   "scripts": {
     "dev": "plasmo dev",
     "build": "plasmo build",

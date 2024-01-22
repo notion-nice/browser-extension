@@ -67,16 +67,16 @@ export function isObserverType(obj) {
  *
  * Wait for an HTML element to be loaded like `div`, `span`, `img`, etc.
  * ex: `onElementLoaded("div.some_class").then(()=>{}).catch(()=>{})`
- * @param {*} elementToObserve wait for this element to load
- * @param {*} parentStaticElement (optional) if parent element is not passed then `document` is used
- * @return {*} Promise - return promise when `elementToObserve` is loaded
+ * @param elementToObserve wait for this element to load
+ * @param parentStaticElement (optional) if parent element is not passed then `document` is used
+ * @return Promise - return promise when `elementToObserve` is loaded
  */
 export function onElementLoaded(
-  elementToObserve,
-  parentStaticElement = undefined
+  elementToObserve: string,
+  parentStaticElement: string = undefined
 ) {
   DEBUG && console.log(`waiting for element: ${elementToObserve}`)
-  const promise = new Promise((resolve, reject) => {
+  const promise = new Promise<boolean>((resolve, reject) => {
     try {
       if (getElement(elementToObserve)) {
         DEBUG && console.log(`element already present: ${elementToObserve}`)

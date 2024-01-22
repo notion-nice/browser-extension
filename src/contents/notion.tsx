@@ -1,17 +1,9 @@
 import { StyleProvider } from "@ant-design/cssinjs"
 import createCache from "@emotion/cache"
 import { CacheProvider } from "@emotion/react"
-import { animated, useSpring } from "@react-spring/web"
-import type { MenuProps } from "antd"
-import { Button, ConfigProvider, Dropdown, message, Space, Tooltip } from "antd"
+import { ConfigProvider } from "antd"
 import tailwindCSS from "data-text:~tailwindCSS.css"
-import type {
-  PlasmoCSConfig,
-  PlasmoCSUIProps,
-  PlasmoGetInlineAnchor
-} from "plasmo"
-import type { CSSProperties } from "react"
-import { useRef } from "react"
+import type { PlasmoCSConfig, PlasmoCSUIProps } from "plasmo"
 
 import { MenuFold } from "~components"
 
