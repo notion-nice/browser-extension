@@ -10,10 +10,6 @@ import { MenuFold } from "~components"
 export const config: PlasmoCSConfig = {
   matches: ["https://www.notion.so/*"]
 }
-// export const getOverlayAnchor: PlasmoGetOverlayAnchor = async () =>
-//   document.querySelector(`[href="/#pricing"]`)
-// export const getInlineAnchor: PlasmoGetInlineAnchor = () =>
-//   document.querySelector("#notion-flink-inject")
 export const getShadowHostId = () => "notion-flink-content-root"
 
 const styleElement = document.createElement("style")

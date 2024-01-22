@@ -2,7 +2,7 @@ import { animated, useSpring } from "@react-spring/web"
 import { useHover } from "@use-gesture/react"
 import { theme } from "antd"
 import type { CSSProperties, PropsWithChildren } from "react"
-import { useRef } from "react"
+import { useEffect, useRef } from "react"
 
 const { useToken } = theme
 
@@ -10,13 +10,7 @@ export const MenuFold = ({ children }: PropsWithChildren) => {
   const { token } = useToken()
   const ref = useRef<HTMLButtonElement>(null)
   const isOpen = useRef(false)
-  const [spring, api] = useSpring(
-    () => ({
-      width: 0,
-      visibility: "hidden" as CSSProperties["visibility"]
-    }),
-    []
-  )
+  const [spring, api] = useSpring(() => ({ width: 0 }), [])
   const [r, ra] = useSpring(() => ({
     from: {
       transform: "translateX(0px) translateY(-50%) rotate(0deg)"
@@ -56,6 +50,9 @@ export const MenuFold = ({ children }: PropsWithChildren) => {
   )
 
   const onClick = () => {
+    const root: HTMLDivElement = document.body.querySelector(
+      ".notion-cursor-listener"
+    )!
     if (isOpen.current) {
       isOpen.current = false
       ra.start({
@@ -63,11 +60,13 @@ export const MenuFold = ({ children }: PropsWithChildren) => {
       })
       sa.start({ transform: "translateY(0.15rem) rotate(15deg)" })
       da.start({ transform: "translateY(-0.15rem) rotate(-15deg)" })
-      api.start({ width: 0, visibility: "hidden" })
+      api.start({ width: 0 })
+      root.style.width = `100vw`
       return
     }
     isOpen.current = true
-    api.start({ width: 240, visibility: "visible" })
+    api.start({ width: 240 })
+    root.style.width = `calc(100vw - 240px)`
     ra.start({
       transform: "translateX(-240px) translateY(-50%) rotate(180deg)"
     })
@@ -77,7 +76,11 @@ export const MenuFold = ({ children }: PropsWithChildren) => {
 
   return (
     <>
-      <animated.div style={spring}>{children}</animated.div>
+      <animated.div
+        className="fixed right-0 top-0 h-full bg-black/80"
+        style={spring}>
+        {children}
+      </animated.div>
       <animated.div className="fixed right-0 top-1/2 z-40" style={r}>
         <button ref={ref} onClick={onClick}>
           <span>
