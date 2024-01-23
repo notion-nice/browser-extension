@@ -10,7 +10,18 @@ export const MenuFold = ({ children }: PropsWithChildren) => {
   const { token } = useToken()
   const ref = useRef<HTMLButtonElement>(null)
   const isOpen = useRef(false)
-  const [spring, api] = useSpring(() => ({ width: 0 }), [])
+  const [spring, api] = useSpring(() => ({
+    width: 0,
+    onChange(result) {
+      const w = result.value.width
+      const root: HTMLDivElement = document.body.querySelector(
+        ".notion-cursor-listener"
+      )
+      if (root) {
+        root.style.width = `calc(100vw - ${w}px)`
+      }
+    }
+  }))
   const [r, ra] = useSpring(() => ({
     from: {
       transform: "translateX(0px) translateY(-50%) rotate(0deg)"
@@ -50,9 +61,6 @@ export const MenuFold = ({ children }: PropsWithChildren) => {
   )
 
   const onClick = () => {
-    const root: HTMLDivElement = document.body.querySelector(
-      ".notion-cursor-listener"
-    )!
     if (isOpen.current) {
       isOpen.current = false
       ra.start({
@@ -61,12 +69,10 @@ export const MenuFold = ({ children }: PropsWithChildren) => {
       sa.start({ transform: "translateY(0.15rem) rotate(15deg)" })
       da.start({ transform: "translateY(-0.15rem) rotate(-15deg)" })
       api.start({ width: 0 })
-      root.style.width = `100vw`
       return
     }
     isOpen.current = true
     api.start({ width: 240 })
-    root.style.width = `calc(100vw - 240px)`
     ra.start({
       transform: "translateX(-240px) translateY(-50%) rotate(180deg)"
     })
