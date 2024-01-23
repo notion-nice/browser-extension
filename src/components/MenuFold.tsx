@@ -28,7 +28,7 @@ export const MenuFold = ({ children }: PropsWithChildren) => {
     }
   }))
   const [c, ca] = useSpring(() => ({
-    from: { opacity: 0.25 }
+    from: { opacity: 0.45 }
   }))
   const [s, sa] = useSpring(() => ({
     from: { transform: "translateY(0.15rem) rotate(15deg)" }
@@ -45,7 +45,7 @@ export const MenuFold = ({ children }: PropsWithChildren) => {
           sa.start({ transform: "translateY(0.15rem) rotate(15deg)" })
           da.start({ transform: "translateY(-0.15rem) rotate(-15deg)" })
         } else {
-          ca.start({ opacity: 0.25 })
+          ca.start({ opacity: 0.45 })
           sa.start({ transform: "translateY(0.15rem) rotate(0deg)" })
           da.start({ transform: "translateY(-0.15rem) rotate(0deg)" })
         }
@@ -54,7 +54,7 @@ export const MenuFold = ({ children }: PropsWithChildren) => {
       if (hovering) {
         ca.start({ opacity: 1 })
       } else {
-        ca.start({ opacity: 0.25 })
+        ca.start({ opacity: 0.45 })
       }
     },
     { target: ref }
@@ -83,8 +83,12 @@ export const MenuFold = ({ children }: PropsWithChildren) => {
   return (
     <>
       <animated.div
-        className="fixed right-0 top-0 h-full bg-black/80"
-        style={spring}>
+        className="fixed right-0 top-0 h-full"
+        style={{
+          backgroundColor: token.colorBgContainer,
+          color: token.colorTextBase,
+          ...spring
+        }}>
         {children}
       </animated.div>
       <animated.div className="fixed right-0 top-1/2 z-40" style={r}>
