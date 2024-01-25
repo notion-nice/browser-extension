@@ -1,13 +1,15 @@
 import { animated, useSpring } from "@react-spring/web"
 import { useHover } from "@use-gesture/react"
-import { theme } from "antd"
-import type { CSSProperties, PropsWithChildren } from "react"
-import { useEffect, useRef } from "react"
+import type { PropsWithChildren } from "react"
+import { useRef, useState } from "react"
 
-const { useToken } = theme
+import { cn } from "~lib/utils"
+
+const sidebar = {
+  width: 260
+}
 
 export const MenuFold = ({ children }: PropsWithChildren) => {
-  const { token } = useToken()
   const ref = useRef<HTMLButtonElement>(null)
   const isOpen = useRef(false)
   const [spring, api] = useSpring(() => ({
@@ -72,9 +74,9 @@ export const MenuFold = ({ children }: PropsWithChildren) => {
       return
     }
     isOpen.current = true
-    api.start({ width: 240 })
+    api.start({ width: sidebar.width })
     ra.start({
-      transform: "translateX(-240px) translateY(-50%) rotate(180deg)"
+      transform: `translateX(-${sidebar.width}px) translateY(-50%) rotate(180deg)`
     })
     sa.start({ transform: "translateY(0.15rem) rotate(0deg)" })
     da.start({ transform: "translateY(-0.15rem) rotate(0deg)" })
@@ -83,28 +85,30 @@ export const MenuFold = ({ children }: PropsWithChildren) => {
   return (
     <>
       <animated.div
-        className="fixed right-0 top-0 h-full"
-        style={{
-          backgroundColor: token.colorBgContainer,
-          color: token.colorTextBase,
-          ...spring
-        }}>
-        {children}
+        className="nf-fixed nf-right-0 nf-top-0 nf-h-full nf-bg-background nf-text-foreground"
+        style={spring}>
+        <div
+          className={"nf-p-2 nf-h-full nf-overflow-hidden"}
+          style={{ width: sidebar.width }}>
+          {children}
+        </div>
       </animated.div>
-      <animated.div className="fixed right-0 top-1/2 z-40" style={r}>
+      <animated.div
+        className="nf-fixed nf-right-0 nf-top-1/2 nf-z-40"
+        style={r}>
         <button ref={ref} onClick={onClick}>
           <span>
             <animated.div
-              className="flex h-[72px] w-8 items-center justify-center"
+              className="nf-flex nf-h-[72px] nf-w-8 nf-items-center nf-justify-center"
               style={c}>
-              <div className="flex h-6 w-6 flex-col items-center">
+              <div className="nf-flex nf-h-6 nf-w-6 nf-flex-col nf-items-center">
                 <animated.div
-                  className="h-3 w-1 rounded-full"
-                  style={{ backgroundColor: token.colorPrimary, ...s }}
+                  className="nf-h-3 nf-w-1 nf-rounded-full nf-bg-primary"
+                  style={s}
                 />
                 <animated.div
-                  className="h-3 w-1 rounded-full bg-token-text-primary"
-                  style={{ backgroundColor: token.colorPrimary, ...d }}
+                  className="nf-h-3 nf-w-1 nf-rounded-full nf-bg-primary"
+                  style={d}
                 />
               </div>
             </animated.div>
