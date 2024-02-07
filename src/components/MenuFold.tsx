@@ -88,7 +88,7 @@ export const MenuFold = ({ children }: PropsWithChildren) => {
         className="nf-fixed nf-right-0 nf-top-0 nf-h-full nf-bg-background nf-text-foreground"
         style={spring}>
         <div
-          className={"nf-p-2 nf-h-full nf-overflow-hidden"}
+          className={"nf-p-2 nf-h-full nf-overflow-hidden nf-border-solid nf-border-l nf-border-border"}
           style={{ width: sidebar.width }}>
           {children}
         </div>
