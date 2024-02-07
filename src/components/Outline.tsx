@@ -1,5 +1,3 @@
 export const Outline = () => {
-  return <div>
-    
-  </div>
+  return <div></div>
 }

@@ -37,13 +37,11 @@ const PlasmoOverlay = ({}: PlasmoCSUIProps) => {
           // 根据主题变化做出响应
           if (isDarkTheme) {
             setThemeType("dark")
-            console.log("Dark theme detected");
-            
+            console.log("Dark theme detected")
           }
           if (isLightTheme) {
             setThemeType("light")
-            console.log("Light theme detected");
-            
+            console.log("Light theme detected")
           }
         }
 
