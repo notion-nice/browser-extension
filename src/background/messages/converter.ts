@@ -1,9 +1,33 @@
 import type { PlasmoMessaging } from "@plasmohq/messaging"
 
 const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
-  chrome.downloads.download({ url: req.body.exportURL }, function (downloadId) {
-    res.send({ downloadId })
+  const response = await fetch(req.body.exportURL)
+  if (!response.ok) {
+    throw new Error("Failed to download file")
+  }
+
+  // 获取ZIP文件的二进制数据
+  const arrayBuffer = await response.arrayBuffer()
+  const zipData = new Uint8Array(arrayBuffer)
+  const file = new Blob([zipData], { type: "application/octet-stream" })
+
+  const formData = new FormData()
+  formData.append("file", file)
+
+  fetch(`${process.env.PLASMO_PUBLIC_WEB_HOST}/api/converter`, {
+    method: "POST",
+    body: formData
   })
+    .then((response) => response.json())
+    .then((data) => {
+      // 请求成功，处理响应数据
+      console.log(data)
+      res.send(data)
+    })
+    .catch((error) => {
+      // 请求失败，处理错误
+      console.error("Error uploading file:", error)
+    })
 }
 
 export default handler
