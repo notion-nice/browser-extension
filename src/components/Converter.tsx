@@ -8,8 +8,8 @@ import { extractNotionPageId } from "~utility"
 import { Button } from "./ui/button"
 
 export const Converter = () => {
-  const fetchZip = async (exportURL: string) => {
-    sendToBackground({ name: "converter", body: { exportURL } })
+  const fetchZip = async (exportURL: string, pageId: string) => {
+    sendToBackground({ name: "converter", body: { exportURL, pageId } })
   }
   const onClick = async () => {
     const pageId = extractNotionPageId(window.location.href)
@@ -47,7 +47,7 @@ export const Converter = () => {
       const results = ret.data.results
       if (results[0].state === "success") {
         is_task_in_progress = false
-        fetchZip(results[0].status.exportURL)
+        fetchZip(results[0].status.exportURL, pageId)
 
         // cbs.success && (await cbs.success(results[0]));
       } else if (results[0].state === "failure") {
@@ -62,7 +62,8 @@ export const Converter = () => {
   }
   const onTestClick = () =>
     fetchZip(
-      "https://file.notion.so/f/t/a6e18ff0-2f42-4edd-b4d0-0eb924acaa91/Export-56da0238-b00c-430d-8153-abe60a8c9772.zip?id=6643411a-e8fe-42a7-8a8e-ddbac57b4b80&table=user_export&spaceId=&expirationTimestamp=1707996772657&signature=4LxnkRx3DpCRMFAV-N-Tl4R81SJZiMMoFAoXJCdlBgw&download=true&downloadName=a6e18ff0-2f42-4edd-b4d0-0eb924acaa91%2FExport-56da0238-b00c-430d-8153-abe60a8c9772.zip"
+      "https://file.notion.so/f/t/a6e18ff0-2f42-4edd-b4d0-0eb924acaa91/Export-56da0238-b00c-430d-8153-abe60a8c9772.zip?id=6643411a-e8fe-42a7-8a8e-ddbac57b4b80&table=user_export&spaceId=&expirationTimestamp=1707996772657&signature=4LxnkRx3DpCRMFAV-N-Tl4R81SJZiMMoFAoXJCdlBgw&download=true&downloadName=a6e18ff0-2f42-4edd-b4d0-0eb924acaa91%2FExport-56da0238-b00c-430d-8153-abe60a8c9772.zip",
+      "8b98f3457cdd43e7bba2e17cb057fcb8"
     )
 
   return (

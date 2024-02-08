@@ -13,6 +13,7 @@ const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
 
   const formData = new FormData()
   formData.append("file", file)
+  formData.append("filename", req.body.pageId)
 
   fetch(`${process.env.PLASMO_PUBLIC_WEB_HOST}/api/converter`, {
     method: "POST",
