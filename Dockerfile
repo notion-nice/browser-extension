@@ -46,14 +46,14 @@ USER nextjs
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
 COPY --from=installer --chown=nextjs:nodejs /app/apps/web/.next/standalone .
-COPY --from=installer --chown=nextjs:nodejs /app/apps/web/.next/static ./apps/web/.next/static
+COPY --from=installer --chown=nextjs:nodejs /app/apps/web/.next/static ./.next/static
 
 
 # You only need to copy next.config.js if you are NOT using the default configuration
 # COPY --from=installer /app/apps/web/next.config.js .
 # COPY --from=installer /app/apps/web/package.json .
 # COPY --from=installer /app/node_modules ./node_modules
-COPY --from=installer /app/apps/web/public ./apps/web/public
+COPY --from=installer /app/apps/web/public ./public
 # COPY --from=installer /app/apps/web/tracing.js ./apps/web/tracing.js
 # COPY --from=installer /app/apps/web/node_modules ./apps/web/node_modules
 
@@ -63,4 +63,4 @@ EXPOSE 3000
 
 ENV PORT 3000
 
-CMD cd apps/web && node server.js
+CMD node server.js
