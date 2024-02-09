@@ -14,8 +14,6 @@ RUN yarn global add turbo \
 # Add lockfile and package.json's of isolated subworkspace
 FROM base AS installer
 RUN apk add --no-cache libc6-compat
-# RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories \
-#   && apk add --no-cache libc6-compat
 
 WORKDIR /app
 # First install the dependencies (as they change less often)
@@ -58,6 +56,8 @@ COPY --from=installer --chown=nextjs:nodejs /app/apps/web/.next/static ./apps/we
 COPY --from=installer /app/apps/web/public ./apps/web/public
 # COPY --from=installer /app/apps/web/tracing.js ./apps/web/tracing.js
 # COPY --from=installer /app/apps/web/node_modules ./apps/web/node_modules
+
+RUN ls -la
 
 EXPOSE 3000
 
