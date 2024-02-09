@@ -45,7 +45,11 @@
           "editor.defaultFormatter": "esbenp.prettier-vscode"
         }
       },
-      "extensions": ["esbenp.prettier-vscode", "bradlc.vscode-tailwindcss"]
+      "extensions": [
+        "esbenp.prettier-vscode",
+        "bradlc.vscode-tailwindcss",
+        "ms-azuretools.vscode-docker"
+      ]
     }
   }
 
