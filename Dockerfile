@@ -1,35 +1,67 @@
-FROM node:20-alpine AS base
-ENV PNPM_HOME="/pnpm"
-ENV PATH="$PNPM_HOME:$PATH"
-RUN corepack enable
+FROM node:18-alpine AS base
 
-FROM base AS build
-COPY . /app
+# Install dependencies only when needed
+FROM base AS builder
+# RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories \
+#   && apk add --no-cache libc6-compat
+RUN apk add --no-cache libc6-compat
+
 WORKDIR /app
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
-RUN pnpm run --filter=web -r build
+COPY . .
+RUN yarn global add turbo \
+  && turbo prune --scope=web --docker
 
-FROM base AS web
+# Add lockfile and package.json's of isolated subworkspace
+FROM base AS installer
+RUN apk add --no-cache libc6-compat
+# RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories \
+#   && apk add --no-cache libc6-compat
+
+WORKDIR /app
+# First install the dependencies (as they change less often)
+COPY --from=builder /app/out/json/ .
+COPY --from=builder /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
+
+COPY --from=builder /app/out/full/ .
+RUN node build.js \
+  && yarn global add pnpm \
+  && pnpm install
+
+ENV NEXT_TELEMETRY_DISABLED=1
+
+# Build the project
+RUN pnpm dlx turbo run build --filter web...
+
+# Production image, copy all the files and run next
+FROM base AS runner
 WORKDIR /app
 
-ENV NODE_ENV=production
+ARG CODE_ENV
 
-RUN addgroup -g 1001 -S nodejs
-RUN adduser -S nextjs -u 1001
+ENV NODE_ENV production
+# Uncomment the following line in case you want to disable telemetry during runtime.
+# ENV NEXT_TELEMETRY_DISABLED 1
 
-COPY --from=build /app/apps/web/public ./public
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+USER nextjs
 
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
-COPY --from=build --chown=nextjs:nodejs /app/apps/web/.next/standalone ./
-COPY --from=build --chown=nextjs:nodejs /app/apps/web/.next/static ./.next/static
+COPY --from=installer --chown=nextjs:nodejs /app/apps/web/.next/standalone .
+COPY --from=installer --chown=nextjs:nodejs /app/apps/web/.next/static ./apps/web/.next/static
 
 
-USER nextjs
+# You only need to copy next.config.js if you are NOT using the default configuration
+# COPY --from=installer /app/apps/web/next.config.js .
+# COPY --from=installer /app/apps/web/package.json .
+# COPY --from=installer /app/node_modules ./node_modules
+COPY --from=installer /app/apps/web/public ./apps/web/public
+# COPY --from=installer /app/apps/web/tracing.js ./apps/web/tracing.js
+# COPY --from=installer /app/apps/web/node_modules ./apps/web/node_modules
 
 EXPOSE 3000
 
 ENV PORT 3000
-ENV HOSTNAME localhost
 
-CMD ["node", "server.js"]
+CMD cd apps/web && node server.js
