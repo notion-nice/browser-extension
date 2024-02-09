@@ -7,7 +7,7 @@ FROM base AS build
 COPY . /usr/src/app
 WORKDIR /usr/src/app
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
-RUN pnpm run --filter=web -r build
+RUN pnpm run -r build
 RUN pnpm deploy --filter=web --prod /prod/web
 
 FROM base AS web
