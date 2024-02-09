@@ -23,8 +23,7 @@ COPY --from=builder /app/out/json/ .
 COPY --from=builder /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
 
 COPY --from=builder /app/out/full/ .
-RUN node build.js \
-  && yarn global add pnpm \
+RUN yarn global add pnpm \
   && pnpm install
 
 ENV NEXT_TELEMETRY_DISABLED=1
