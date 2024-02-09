@@ -26,4 +26,4 @@ jobs:
         context: .
         file: ./Dockerfile
         push: true
-        tags: ghcr.io/notion-Flink/web:latest
+        tags: ghcr.io/notion-flink/web:latest
