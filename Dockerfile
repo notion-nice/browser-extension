@@ -11,20 +11,19 @@ RUN pnpm run --filter=web -r build
 RUN pnpm deploy --filter=web --prod /prod/web
 
 FROM base AS web
-COPY --from=build /prod/web /prod/web
-WORKDIR /prod/web
+WORKDIR /app
 
 ENV NODE_ENV=production
 
 RUN addgroup -g 1001 -S nodejs
 RUN adduser -S nextjs -u 1001
 
-COPY --from=builder /prod/web/public ./public
+COPY --from=build /prod/web/public ./public
 
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
-COPY --from=builder --chown=nextjs:nodejs /prod/web/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /prod/web/.next/static ./.next/static
+COPY --from=build --chown=nextjs:nodejs /prod/web/.next/standalone ./
+COPY --from=build --chown=nextjs:nodejs /prod/web/.next/static ./.next/static
 
 
 USER nextjs
