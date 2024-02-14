@@ -6,7 +6,8 @@ import { useRef, useState } from "react"
 import { cn } from "~lib/utils"
 
 const sidebar = {
-  width: 260
+  width: 480,
+  fixed: true
 }
 
 export const MenuFold = ({ children }: PropsWithChildren) => {
@@ -15,6 +16,7 @@ export const MenuFold = ({ children }: PropsWithChildren) => {
   const [spring, api] = useSpring(() => ({
     width: 0,
     onChange(result) {
+      if (sidebar.fixed) return
       const w = result.value.width
       const root: HTMLDivElement = document.body.querySelector(
         ".notion-cursor-listener"
