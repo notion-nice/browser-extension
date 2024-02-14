@@ -9,7 +9,11 @@ import { Button } from "./ui/button"
 
 export const Converter = () => {
   const fetchZip = async (exportURL: string, pageId: string) => {
-    sendToBackground({ name: "converter", body: { exportURL, pageId } })
+    const resp = await sendToBackground({
+      name: "converter",
+      body: { exportURL, pageId }
+    })
+    console.log("fetchZip", resp)
   }
   const onClick = async () => {
     const pageId = extractNotionPageId(window.location.href)

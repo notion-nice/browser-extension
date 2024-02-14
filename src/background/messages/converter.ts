@@ -22,8 +22,14 @@ const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
     .then((response) => response.json())
     .then((data) => {
       // 请求成功，处理响应数据
-      console.log(data)
-      res.send(data)
+      if (data.url) {
+        const mdUrl = data.url
+        fetch(`${process.env.PLASMO_PUBLIC_WEB_HOST}/api/files/${data.url}`)
+          .then((response) => response.json())
+          .then((data) => {
+            res.send({ md: data, url: mdUrl })
+          })
+      }
     })
     .catch((error) => {
       // 请求失败，处理错误
