@@ -3,7 +3,6 @@ import type { PlasmoCSConfig, PlasmoCSUIProps } from "plasmo"
 import { useEffect, useState } from "react"
 
 import { MenuFold, Panel } from "~components"
-import { cn } from "~lib/utils"
 import { getElement, onElementLoaded } from "~utility"
 
 export const config: PlasmoCSConfig = {

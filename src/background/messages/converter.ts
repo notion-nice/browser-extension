@@ -25,7 +25,7 @@ const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
       if (data.url) {
         const mdUrl = data.url
         fetch(`${process.env.PLASMO_PUBLIC_WEB_HOST}/api/files/${data.url}`)
-          .then((response) => response.json())
+          .then((response) => response.text())
           .then((data) => {
             res.send({ md: data, url: mdUrl })
           })

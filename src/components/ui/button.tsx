@@ -1,6 +1,7 @@
-import * as React from "react"
+import { ReloadIcon } from "@radix-ui/react-icons"
 import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
+import * as React from "react"
 
 import { cn } from "~lib/utils"
 
@@ -18,19 +19,19 @@ const buttonVariants = cva(
         secondary:
           "nf-bg-secondary nf-text-secondary-foreground nf-shadow-sm hover:nf-bg-secondary/80",
         ghost: "hover:nf-bg-accent hover:nf-text-accent-foreground",
-        link: "nf-text-primary nf-underline-offset-4 hover:nf-underline",
+        link: "nf-text-primary nf-underline-offset-4 hover:nf-underline"
       },
       size: {
         default: "nf-h-9 nf-px-4 nf-py-2",
         sm: "nf-h-8 nf-rounded-md nf-px-3 nf-text-xs",
         lg: "nf-h-10 nf-rounded-md nf-px-8",
-        icon: "nf-h-9 nf-w-9",
-      },
+        icon: "nf-h-9 nf-w-9"
+      }
     },
     defaultVariants: {
       variant: "default",
-      size: "default",
-    },
+      size: "default"
+    }
   }
 )
 
@@ -38,17 +39,32 @@ export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean
+  loading?: boolean
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
+  (
+    {
+      className,
+      variant,
+      size,
+      asChild = false,
+      loading = false,
+      children,
+      ...props
+    },
+    ref
+  ) => {
     const Comp = asChild ? Slot : "button"
     return (
       <Comp
         className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
         {...props}
-      />
+        disabled={loading ? true : props.disabled}>
+        {loading && <ReloadIcon className="nf-mr-2 nf-h-4 nf-w-4 nf-animate-spin" />}
+        {children}
+      </Comp>
     )
   }
 )
