@@ -4,11 +4,12 @@ import { useEffect, useState } from "react"
 
 import { MenuFold, Panel } from "~components"
 import { getElement, onElementLoaded } from "~utility"
+import { SHADOW_HOST_ID } from "~utils/constant"
 
 export const config: PlasmoCSConfig = {
   matches: ["https://www.notion.so/*"]
 }
-export const getShadowHostId = () => "notion-flink-content-root"
+export const getShadowHostId = () => SHADOW_HOST_ID
 
 export const getStyle = () => {
   const style = document.createElement("style")

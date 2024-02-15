@@ -1,14 +1,57 @@
+import { useMount } from "ahooks"
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~components/ui/tabs"
+import TEMPLATE from "~template"
+import {
+  BASIC_THEME_ID,
+  MARKDOWN_THEME_ID,
+  STYLE,
+  STYLE_LABELS,
+  TEMPLATE_CUSTOM_NUM,
+  TEMPLATE_NUM,
+  TEMPLATE_OPTIONS
+} from "~utils/constant"
+import { addStyleLabel, replaceStyle } from "~utils/helper"
 
 import { Converter } from "./Converter"
 
 export const Panel = () => {
+  useMount(() => {
+    let style = ""
+
+    // 如果为空先把数据放进去
+    if (!window.localStorage.getItem(STYLE)) {
+      window.localStorage.setItem(STYLE, TEMPLATE.style.custom)
+    }
+
+    const templateNum = parseInt(window.localStorage.getItem(TEMPLATE_NUM), 10)
+
+    // 用于处理刷新后的信息持久化
+    // 属于自定义主题则从localstorage中读数据
+    if (templateNum === TEMPLATE_CUSTOM_NUM) {
+      style = window.localStorage.getItem(STYLE)
+    } else {
+      if (templateNum) {
+        const { id } = TEMPLATE_OPTIONS[templateNum]
+        style = TEMPLATE.style[id]
+      } else {
+        style = TEMPLATE.style.normal
+      }
+    }
+
+    // 在 plasmo-csui 中添加style标签
+    addStyleLabel(STYLE_LABELS)
+
+    // 初始化整体主题
+    replaceStyle(BASIC_THEME_ID, TEMPLATE.basic)
+    replaceStyle(MARKDOWN_THEME_ID, style)
+  })
   return (
     <Tabs
       defaultValue="toc"
       className="nf-w-full nf-flex nf-flex-col nf-h-full nf-overflow-hidden">
       <TabsList className="nf-grid nf-w-full nf-grid-cols-2">
-        <TabsTrigger value="toc">TOC</TabsTrigger>
+        <TabsTrigger value="toc">Table Of Content</TabsTrigger>
         <TabsTrigger value="converter">Converter</TabsTrigger>
       </TabsList>
       <div className="nf-flex-1 nf-overflow-hidden">
