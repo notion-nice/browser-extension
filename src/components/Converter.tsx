@@ -1,28 +1,59 @@
+import { useLocalStorageState } from "ahooks"
 import axios from "axios"
 import React, { useMemo, useRef, useState } from "react"
 
 import { sendToBackground } from "@plasmohq/messaging"
 
+import TEMPLATE from "~template"
 import { extractNotionPageId } from "~utility"
-import { BOX_ID, LAYOUT_ID } from "~utils/constant"
-import { parserMarkdownByWechat } from "~utils/helper"
+import {
+  BOX_ID,
+  LAYOUT_ID,
+  MARKDOWN_THEME_ID,
+  STYLE,
+  TEMPLATE_NUM,
+  TEMPLATE_OPTIONS
+} from "~utils/constant"
+import { parserMarkdownByWechat, replaceStyle } from "~utils/helper"
 
 import { Button } from "./ui/button"
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from "./ui/dropdown-menu"
 import { Label } from "./ui/label"
 import { Switch } from "./ui/switch"
 
 export const Converter = () => {
+  const containerRef = useRef<HTMLDivElement>(null)
   const previewContainerRef = useRef<HTMLDivElement>(null)
   const previewWrapRef = useRef<HTMLDivElement>(null)
+  const [lookCss, setLookCss] = useState(false)
   const [loading, setLoading] = useState(false)
   const [showMd, setShowMd] = useState(false)
   const [mdContent, setContent] = useState("")
   const [mdUrl, setUrl] = useState("")
+  const [templateNum, setTemplateNum] = useLocalStorageState<number>(
+    TEMPLATE_NUM,
+    {
+      defaultValue: 0,
+      serializer: (v) => String(v) ?? "0",
+      deserializer: (v) => parseInt(v, 10)
+    }
+  )
 
   const parseHtml = useMemo(() => {
     if (!mdContent) return ""
     return parserMarkdownByWechat(mdContent, mdUrl)
   }, [mdContent])
+
+  const setStyle = (style: string) => {
+    window.localStorage.setItem(STYLE, style)
+    replaceStyle(MARKDOWN_THEME_ID, style)
+  }
   const fetchZip = async (exportURL: string, pageId: string) => {
     const resp = await sendToBackground({
       name: "converter",
@@ -107,20 +138,47 @@ export const Converter = () => {
       }
     }
   }
-  const onTestClick = () => {
-    setLoading(true)
-    fetchZip(
-      "https://file.notion.so/f/t/a6e18ff0-2f42-4edd-b4d0-0eb924acaa91/Export-56da0238-b00c-430d-8153-abe60a8c9772.zip?id=6643411a-e8fe-42a7-8a8e-ddbac57b4b80&table=user_export&spaceId=&expirationTimestamp=1707996772657&signature=4LxnkRx3DpCRMFAV-N-Tl4R81SJZiMMoFAoXJCdlBgw&download=true&downloadName=a6e18ff0-2f42-4edd-b4d0-0eb924acaa91%2FExport-56da0238-b00c-430d-8153-abe60a8c9772.zip",
-      "8b98f3457cdd43e7bba2e17cb057fcb8"
-    )
-  }
 
   return (
-    <div className="nf-flex nf-flex-col nf-gap-2 nf-pt-2 w-full nf-h-full nf-overflow-hidden">
+    <div
+      ref={containerRef}
+      className="nf-flex nf-flex-col nf-gap-2 nf-pt-2 w-full nf-h-full nf-overflow-hidden">
       <div className="nf-flex nf-items-center nf-space-x-2">
         <Button loading={loading} onClick={onClick}>
           预览
         </Button>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline">主题</Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent
+            portalProps={{ container: containerRef.current }}>
+            {TEMPLATE_OPTIONS.map((option, index) => (
+              <DropdownMenuCheckboxItem
+                key={index}
+                checked={templateNum === index}
+                onCheckedChange={(checked) => {
+                  if (!checked) return
+                  setTemplateNum(index)
+                  if (option.id === "custom") {
+                    // 切换自定义自动打开css编辑
+                    // setStyleEditorOpen(true)
+                  } else {
+                    setStyle(TEMPLATE.style[option.id])
+                  }
+                }}>
+                {option.name}
+              </DropdownMenuCheckboxItem>
+            ))}
+            <DropdownMenuSeparator />
+            <DropdownMenuCheckboxItem
+              checked={lookCss}
+              onCheckedChange={setLookCss}>
+              查看主题CSS
+            </DropdownMenuCheckboxItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
         <div className="nf-flex nf-items-center nf-space-x-2">
           <Switch
             id="airplane-mode"

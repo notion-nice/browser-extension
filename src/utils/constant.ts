@@ -48,8 +48,7 @@ export const TEMPLATE_OPTIONS = [
   {
     id: "nightPurple",
     name: "凝夜紫",
-    author: "童欧巴",
-    isNew: true
+    author: "童欧巴"
   },
   {
     id: "cuteGreen",
@@ -59,8 +58,7 @@ export const TEMPLATE_OPTIONS = [
   {
     id: "extremeBlack",
     name: "极简黑",
-    author: "小鱼",
-    isNew: true
+    author: "小鱼"
   },
   {
     id: "orangeHeart",
