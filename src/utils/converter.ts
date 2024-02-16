@@ -11,12 +11,30 @@ import {
 } from "./constant"
 
 export async function copyTextToClipboard(text: string) {
-  try {
-    await navigator.clipboard.writeText(text)
-    console.log("Text copied to clipboard")
-  } catch (err) {
-    console.error("Failed to copy: ", err)
+  // 获取 input
+  let input = document.getElementById("nice-copy-input") as HTMLInputElement;
+  if (!input) {
+    // input 不能用 CSS 隐藏，必须在页面内存在。
+    input = document.createElement("input");
+    input.id = "copy-input";
+    input.style.position = "absolute";
+    input.style.left = "-1000px";
+    input.style.zIndex = "-1000";
+    document.body.appendChild(input);
   }
+  // 让 input 选中一个字符，无所谓那个字符
+  input.value = "NOTHING";
+  input.setSelectionRange(0, 1);
+  input.focus();
+
+  // 复制触发
+  document.addEventListener("copy", function copyCall(e) {
+    e.preventDefault();
+    e.clipboardData.setData("text/html", text);
+    e.clipboardData.setData("text/plain", text);
+    document.removeEventListener("copy", copyCall);
+  });
+  document.execCommand("copy");
 }
 
 export const solveWeChatMath = () => {
