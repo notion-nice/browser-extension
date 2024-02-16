@@ -1,3 +1,4 @@
+import { ReloadIcon } from "@radix-ui/react-icons"
 import { useLocalStorageState } from "ahooks"
 import axios from "axios"
 import React, { useMemo, useRef, useState } from "react"
@@ -22,16 +23,17 @@ import {
 } from "~utils/converter"
 import { parserMarkdownByWechat, replaceStyle } from "~utils/helper"
 
-import { Button } from "./ui/button"
 import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger
-} from "./ui/dropdown-menu"
-import { Label } from "./ui/label"
-import { Switch } from "./ui/switch"
+  Menubar,
+  MenubarCheckboxItem,
+  MenubarContent,
+  MenubarItem,
+  MenubarMenu,
+  MenubarRadioGroup,
+  MenubarRadioItem,
+  MenubarSeparator,
+  MenubarTrigger
+} from "./ui/menubar"
 import { useToast } from "./ui/use-toast"
 
 export const Converter = () => {
@@ -174,54 +176,55 @@ export const Converter = () => {
     <div
       ref={containerRef}
       className="nf-flex nf-flex-col nf-gap-2 w-full nf-h-full nf-overflow-hidden">
-      <div className="nf-flex nf-items-center nf-space-x-2">
-        <Button loading={loading} onClick={onClick}>
-          预览
-        </Button>
-        <Button variant="outline" loading={loading} onClick={copyWechat}>
-          公众号
-        </Button>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline">主题</Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            portalProps={{ container: containerRef.current }}>
-            {TEMPLATE_OPTIONS.map((option, index) => (
-              <DropdownMenuCheckboxItem
-                key={index}
-                checked={templateNum === index}
-                onCheckedChange={(checked) => {
-                  if (!checked) return
-                  setTemplateNum(index)
-                  if (option.id === "custom") {
-                    // 切换自定义自动打开css编辑
-                    // setStyleEditorOpen(true)
-                  } else {
-                    setStyle(TEMPLATE.style[option.id])
-                  }
-                }}>
-                {option.name}
-              </DropdownMenuCheckboxItem>
-            ))}
-            <DropdownMenuSeparator />
-            <DropdownMenuCheckboxItem
-              checked={lookCss}
-              onCheckedChange={setLookCss}>
-              查看主题CSS
-            </DropdownMenuCheckboxItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+      <Menubar>
+        <MenubarMenu>
+          <MenubarTrigger>文件</MenubarTrigger>
+          <MenubarContent portalProps={{ container: containerRef.current }}>
+            <MenubarItem onClick={onClick}>
+              <ReloadIcon className="nf-mr-2 nf-h-4 nf-w-4" />
+              重新生成
+            </MenubarItem>
+            <MenubarSeparator />
+            <MenubarCheckboxItem checked={showMd} onCheckedChange={setShowMd}>
+              查看MD内容
+            </MenubarCheckboxItem>
+          </MenubarContent>
+        </MenubarMenu>
+        <MenubarMenu>
+          <MenubarTrigger>主题</MenubarTrigger>
+          <MenubarContent portalProps={{ container: containerRef.current }}>
+            <MenubarRadioGroup
+              value={String(templateNum)}
+              onValueChange={(value) => {
+                const index = parseInt(value, 10)
+                setTemplateNum(index)
+                const option = TEMPLATE_OPTIONS[index]
+                if (!option.id) return
+                if (option.id === "custom") {
+                  // 切换自定义自动打开css编辑
+                  // setStyleEditorOpen(true)
+                } else {
+                  setStyle(TEMPLATE.style[option.id])
+                }
+              }}>
+              {TEMPLATE_OPTIONS.map((option, index) => (
+                <MenubarRadioItem key={index} value={String(index)}>
+                  {option.name}
+                </MenubarRadioItem>
+              ))}
+            </MenubarRadioGroup>
+            <MenubarSeparator />
+            <MenubarItem inset>Edit...</MenubarItem>
+          </MenubarContent>
+        </MenubarMenu>
+        <MenubarMenu>
+          <MenubarTrigger>内容分发</MenubarTrigger>
+          <MenubarContent portalProps={{ container: containerRef.current }}>
+            <MenubarItem onClick={copyWechat}>微信公众号</MenubarItem>
+          </MenubarContent>
+        </MenubarMenu>
+      </Menubar>
 
-        <div className="nf-flex nf-items-center nf-space-x-2">
-          <Switch
-            id="airplane-mode"
-            checked={showMd}
-            onCheckedChange={setShowMd}
-          />
-          <Label htmlFor="airplane-mode">查看MD内容</Label>
-        </div>
-      </div>
       {showMd ? (
         <pre className="nf-flex-1 nf-overflow-auto">{mdContent}</pre>
       ) : (

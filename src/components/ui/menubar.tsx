@@ -1,10 +1,10 @@
-import * as React from "react"
 import {
   CheckIcon,
   ChevronRightIcon,
-  DotFilledIcon,
+  DotFilledIcon
 } from "@radix-ui/react-icons"
 import * as MenubarPrimitive from "@radix-ui/react-menubar"
+import * as React from "react"
 
 import { cn } from "~lib/utils"
 
@@ -61,8 +61,7 @@ const MenubarSubTrigger = React.forwardRef<
       inset && "nf-pl-8",
       className
     )}
-    {...props}
-  >
+    {...props}>
     {children}
     <ChevronRightIcon className="nf-ml-auto nf-h-4 nf-w-4" />
   </MenubarPrimitive.SubTrigger>
@@ -86,13 +85,22 @@ MenubarSubContent.displayName = MenubarPrimitive.SubContent.displayName
 
 const MenubarContent = React.forwardRef<
   React.ElementRef<typeof MenubarPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof MenubarPrimitive.Content>
+  React.ComponentPropsWithoutRef<typeof MenubarPrimitive.Content> & {
+    portalProps?: MenubarPrimitive.MenubarPortalProps
+  }
 >(
   (
-    { className, align = "start", alignOffset = -4, sideOffset = 8, ...props },
+    {
+      className,
+      align = "start",
+      alignOffset = -4,
+      sideOffset = 8,
+      portalProps,
+      ...props
+    },
     ref
   ) => (
-    <MenubarPrimitive.Portal>
+    <MenubarPrimitive.Portal {...portalProps}>
       <MenubarPrimitive.Content
         ref={ref}
         align={align}
@@ -138,8 +146,7 @@ const MenubarCheckboxItem = React.forwardRef<
       className
     )}
     checked={checked}
-    {...props}
-  >
+    {...props}>
     <span className="nf-absolute nf-left-2 nf-flex nf-h-3.5 nf-w-3.5 nf-items-center nf-justify-center">
       <MenubarPrimitive.ItemIndicator>
         <CheckIcon className="nf-h-4 nf-w-4" />
@@ -160,8 +167,7 @@ const MenubarRadioItem = React.forwardRef<
       "nf-relative nf-flex nf-cursor-default nf-select-none nf-items-center nf-rounded-sm nf-py-1.5 nf-pl-8 nf-pr-2 nf-text-sm nf-outline-none focus:nf-bg-accent focus:nf-text-accent-foreground data-[disabled]:nf-pointer-events-none data-[disabled]:nf-opacity-50",
       className
     )}
-    {...props}
-  >
+    {...props}>
     <span className="nf-absolute nf-left-2 nf-flex nf-h-3.5 nf-w-3.5 nf-items-center nf-justify-center">
       <MenubarPrimitive.ItemIndicator>
         <DotFilledIcon className="nf-h-4 nf-w-4 nf-fill-current" />
@@ -234,5 +240,5 @@ export {
   MenubarSubTrigger,
   MenubarGroup,
   MenubarSub,
-  MenubarShortcut,
+  MenubarShortcut
 }
