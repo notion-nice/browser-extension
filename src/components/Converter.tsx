@@ -1,10 +1,11 @@
 import { ReloadIcon } from "@radix-ui/react-icons"
-import { useLocalStorageState } from "ahooks"
+import { useLocalStorageState, useMount, useUpdate } from "ahooks"
 import axios from "axios"
 import React, { useMemo, useRef, useState } from "react"
 
 import { sendToBackground } from "@plasmohq/messaging"
 
+import { cn } from "~lib/utils"
 import TEMPLATE from "~template"
 import { extractNotionPageId } from "~utility"
 import {
@@ -38,6 +39,7 @@ import { useToast } from "./ui/use-toast"
 
 export const Converter = () => {
   const { toast } = useToast()
+  const update = useUpdate()
   const containerRef = useRef<HTMLDivElement>(null)
   const previewContainerRef = useRef<HTMLDivElement>(null)
   const previewWrapRef = useRef<HTMLDivElement>(null)
@@ -59,6 +61,16 @@ export const Converter = () => {
     if (!mdContent) return ""
     return parserMarkdownByWechat(mdContent, mdUrl)
   }, [mdContent])
+
+  useMount(() => {
+    let timer = window.setInterval(() => {
+      if (containerRef.current && timer) {
+        update()
+        window.clearInterval(timer)
+        timer = null
+      }
+    }, 300)
+  })
 
   const setStyle = (style: string) => {
     window.localStorage.setItem(STYLE, style)
@@ -175,13 +187,23 @@ export const Converter = () => {
   return (
     <div
       ref={containerRef}
-      className="nf-flex nf-flex-col nf-gap-2 w-full nf-h-full nf-overflow-hidden">
+      className="nf-flex nf-relative nf-flex-col nf-gap-2 w-full nf-h-full nf-overflow-hidden">
+      {loading && (
+        <div className="nf-absolute nf-inset-0 nf-bg-black/20 nf-flex nf-justify-center">
+          <ReloadIcon className="nf-mt-11 nf-h-4 nf-w-4 nf-animate-spin" />
+        </div>
+      )}
       <Menubar>
         <MenubarMenu>
           <MenubarTrigger>文件</MenubarTrigger>
           <MenubarContent portalProps={{ container: containerRef.current }}>
-            <MenubarItem onClick={onClick}>
-              <ReloadIcon className="nf-mr-2 nf-h-4 nf-w-4" />
+            <MenubarItem onClick={onClick} disabled={loading}>
+              <ReloadIcon
+                className={cn(
+                  "nf-mr-2 nf-h-4 nf-w-4",
+                  loading && "nf-animate-spin"
+                )}
+              />
               重新生成
             </MenubarItem>
             <MenubarSeparator />
@@ -214,7 +236,9 @@ export const Converter = () => {
               ))}
             </MenubarRadioGroup>
             <MenubarSeparator />
-            <MenubarItem inset>Edit...</MenubarItem>
+            <MenubarCheckboxItem checked={lookCss} onCheckedChange={setLookCss}>
+              查看主题CSS
+            </MenubarCheckboxItem>
           </MenubarContent>
         </MenubarMenu>
         <MenubarMenu>
@@ -226,13 +250,13 @@ export const Converter = () => {
       </Menubar>
 
       {showMd ? (
-        <pre className="nf-flex-1 nf-overflow-auto">{mdContent}</pre>
+        <pre className="nf-flex-1 nf-px-2 nf-overflow-auto">{mdContent}</pre>
       ) : (
         parseHtml && (
           <div
             id={BOX_ID}
             ref={previewContainerRef}
-            className="nf-w-full nf-flex-1 nf-overflow-y-auto">
+            className="nf-w-full nf-px-2 nf-flex-1 nf-overflow-y-auto">
             <section
               id={LAYOUT_ID}
               ref={previewWrapRef}

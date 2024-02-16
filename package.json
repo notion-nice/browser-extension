@@ -1,8 +1,8 @@
 {
-  "name": "notion-flink",
-  "displayName": "Notion Flink",
+  "name": "notion-nice",
+  "displayName": "Notion Nice",
   "version": "0.0.1",
-  "description": "Notion Flink Extension",
+  "description": "Notion Nice Extension",
   "author": "SengMitnick. <sengmitnick@163.com>",
   "scripts": {
     "dev": "plasmo dev",

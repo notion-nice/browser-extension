@@ -1,9 +1,7 @@
 import { animated, useSpring } from "@react-spring/web"
 import { useHover } from "@use-gesture/react"
 import type { PropsWithChildren } from "react"
-import { useRef, useState } from "react"
-
-import { cn } from "~lib/utils"
+import { useRef } from "react"
 
 const sidebar = {
   width: 480,
@@ -90,7 +88,7 @@ export const MenuFold = ({ children }: PropsWithChildren) => {
         className="nf-fixed nf-right-0 nf-top-0 nf-h-full nf-bg-background nf-text-foreground"
         style={spring}>
         <div
-          className={"nf-p-2 nf-h-full nf-overflow-hidden nf-border-solid nf-border-l nf-border-border"}
+          className={"nf-h-full nf-overflow-hidden nf-border-solid nf-border-l nf-border-border"}
           style={{ width: sidebar.width }}>
           {children}
         </div>
