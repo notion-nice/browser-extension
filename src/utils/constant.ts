@@ -35,10 +35,6 @@ export const TEMPLATE_OPTIONS = [
     name: "凝夜紫"
   },
   {
-    id: "cuteGreen",
-    name: "萌绿"
-  },
-  {
     id: "extremeBlack",
     name: "极简黑"
   },
