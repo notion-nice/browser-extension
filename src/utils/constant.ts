@@ -21,9 +21,6 @@ export const STYLE_LABELS = [
   FONT_THEME_ID
 ]
 
-export const ENTER_DELAY = 0.5
-export const LEAVE_DELAY = 0.0
-
 export const TEMPLATE_OPTIONS = [
   {
     id: "normal",

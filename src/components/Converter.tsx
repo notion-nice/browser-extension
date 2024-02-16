@@ -1,6 +1,7 @@
 import { useLocalStorageState } from "ahooks"
 import axios from "axios"
 import React, { useMemo, useRef, useState } from "react"
+// import { toast } from "sonner"
 
 import { sendToBackground } from "@plasmohq/messaging"
 
@@ -10,10 +11,16 @@ import {
   BOX_ID,
   LAYOUT_ID,
   MARKDOWN_THEME_ID,
+  SHADOW_HOST_ID,
   STYLE,
   TEMPLATE_NUM,
   TEMPLATE_OPTIONS
 } from "~utils/constant"
+import {
+  copyTextToClipboard,
+  solveHtml,
+  solveWeChatMath
+} from "~utils/converter"
 import { parserMarkdownByWechat, replaceStyle } from "~utils/helper"
 
 import { Button } from "./ui/button"
@@ -139,6 +146,30 @@ export const Converter = () => {
     }
   }
 
+  const copyWechat = async () => {
+    setLoading(true)
+    const shadowRoot = document.getElementById(SHADOW_HOST_ID)?.shadowRoot
+    if (!shadowRoot) {
+      setLoading(false)
+      return
+    }
+    const layout = shadowRoot.getElementById(LAYOUT_ID) // 保护现场
+    if (!layout) {
+      setLoading(false)
+      return
+    }
+    const html = layout.innerHTML
+    solveWeChatMath()
+    const cpoyHtml = solveHtml()
+    await copyTextToClipboard(cpoyHtml)
+    // toast.success("已复制，请到微信公众平台粘贴")
+    console.log("已复制，请到微信公众平台粘贴");
+    
+    layout.innerHTML = html // 恢复现场
+
+    setLoading(false)
+  }
+
   return (
     <div
       ref={containerRef}
@@ -146,6 +177,9 @@ export const Converter = () => {
       <div className="nf-flex nf-items-center nf-space-x-2">
         <Button loading={loading} onClick={onClick}>
           预览
+        </Button>
+        <Button variant="outline" loading={loading} onClick={copyWechat}>
+          公众号
         </Button>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -200,8 +234,8 @@ export const Converter = () => {
               id={LAYOUT_ID}
               ref={previewWrapRef}
               className="nf-w-full nf-h-full"
-              data-tool="NotionNice Preview"
-              data-website="https://www.mdnice.com"
+              data-tool="NotionFlink Preview"
+              data-website="https://notion.flink.top"
               dangerouslySetInnerHTML={{ __html: parseHtml }}
             />
           </div>
