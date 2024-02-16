@@ -173,7 +173,7 @@ export const Converter = () => {
   return (
     <div
       ref={containerRef}
-      className="nf-flex nf-flex-col nf-gap-2 nf-pt-2 w-full nf-h-full nf-overflow-hidden">
+      className="nf-flex nf-flex-col nf-gap-2 w-full nf-h-full nf-overflow-hidden">
       <div className="nf-flex nf-items-center nf-space-x-2">
         <Button loading={loading} onClick={onClick}>
           预览
