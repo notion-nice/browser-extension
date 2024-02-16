@@ -24,53 +24,27 @@ export const STYLE_LABELS = [
 export const TEMPLATE_OPTIONS = [
   {
     id: "normal",
-    name: "默认主题",
-    author: "zhning12"
-  },
-  {
-    id: "shanchui",
-    name: "山吹",
-    author: "ElyhG"
-  },
-  {
-    id: "rose",
-    name: "蔷薇紫",
-    author: "HeyRain"
+    name: "默认主题"
   },
   {
     id: "fullStackBlue",
-    name: "全栈蓝",
-    author: "Nealyang"
+    name: "全栈蓝"
   },
   {
     id: "nightPurple",
-    name: "凝夜紫",
-    author: "童欧巴"
+    name: "凝夜紫"
   },
   {
     id: "cuteGreen",
-    name: "萌绿",
-    author: "koala"
+    name: "萌绿"
   },
   {
     id: "extremeBlack",
-    name: "极简黑",
-    author: "小鱼"
+    name: "极简黑"
   },
   {
     id: "orangeHeart",
-    name: "橙心",
-    author: "zhning12"
-  },
-  {
-    id: "ink",
-    name: "墨黑",
-    author: "Mayandev"
-  },
-  {
-    id: "purple",
-    name: "姹紫",
-    author: "djmaxwow"
+    name: "橙心"
   },
   {
     id: "green",
@@ -78,54 +52,24 @@ export const TEMPLATE_OPTIONS = [
     author: "夜尽天明"
   },
   {
-    id: "cyan",
-    name: "嫩青",
-    author: "画手"
-  },
-  {
     id: "wechatFormat",
-    name: "WeChat-Format",
-    author: "画手"
+    name: "WeChat-Format"
   },
   {
     id: "blueCyan",
-    name: "兰青",
-    author: "Krahets"
-  },
-  {
-    id: "blueMountain",
-    name: "前端之巅同款",
-    author: "HeyRain"
-  },
-  {
-    id: "geekBlack",
-    name: "极客黑",
-    author: "hyper-xx"
+    name: "兰青"
   },
   {
     id: "red",
-    name: "红绯",
-    author: "HeyRain"
+    name: "红绯"
   },
   {
     id: "blue",
-    name: "蓝莹",
-    author: "谭淞宸"
-  },
-  {
-    id: "scienceBlue",
-    name: "科技蓝",
-    author: "夜尽天明"
-  },
-  {
-    id: "simple",
-    name: "简",
-    author: "aco"
+    name: "蓝莹"
   },
   {
     id: "custom",
-    name: "自定义",
-    author: ""
+    name: "自定义"
   }
 ]
 
