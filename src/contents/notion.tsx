@@ -3,6 +3,7 @@ import type { PlasmoCSConfig, PlasmoCSUIProps } from "plasmo"
 import { useEffect, useState } from "react"
 
 import { MenuFold, Panel } from "~components"
+import { Toaster } from "~components/ui/toaster"
 import { getElement, onElementLoaded } from "~utility"
 import { SHADOW_HOST_ID } from "~utils/constant"
 
@@ -78,6 +79,7 @@ const PlasmoOverlay = ({}: PlasmoCSUIProps) => {
       <MenuFold>
         <Panel />
       </MenuFold>
+      <Toaster />
     </div>
   )
 }

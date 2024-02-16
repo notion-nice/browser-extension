@@ -1,7 +1,6 @@
 import { useLocalStorageState } from "ahooks"
 import axios from "axios"
 import React, { useMemo, useRef, useState } from "react"
-// import { toast } from "sonner"
 
 import { sendToBackground } from "@plasmohq/messaging"
 
@@ -33,8 +32,10 @@ import {
 } from "./ui/dropdown-menu"
 import { Label } from "./ui/label"
 import { Switch } from "./ui/switch"
+import { useToast } from "./ui/use-toast"
 
 export const Converter = () => {
+  const { toast } = useToast()
   const containerRef = useRef<HTMLDivElement>(null)
   const previewContainerRef = useRef<HTMLDivElement>(null)
   const previewWrapRef = useRef<HTMLDivElement>(null)
@@ -162,9 +163,8 @@ export const Converter = () => {
     solveWeChatMath()
     const cpoyHtml = solveHtml()
     await copyTextToClipboard(cpoyHtml)
-    // toast.success("已复制，请到微信公众平台粘贴")
-    console.log("已复制，请到微信公众平台粘贴");
-    
+    toast({ description: "已复制，请到微信公众平台粘贴" })
+
     layout.innerHTML = html // 恢复现场
 
     setLoading(false)
