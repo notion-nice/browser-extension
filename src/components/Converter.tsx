@@ -183,6 +183,25 @@ export const Converter = () => {
 
     setLoading(false)
   }
+  const lookCssTheme = async (checked: boolean) => {
+    setLookCss(checked)
+    if (checked) {
+      toast({ description: "功能开发中，敬请期待~" })
+    }
+  }
+  const switchTheme = async (value: string) => {
+    const index = parseInt(value, 10)
+    const option = TEMPLATE_OPTIONS[index]
+    if (!option.id) return
+    if (option.id === "custom") {
+      // 切换自定义自动打开css编辑
+      // setStyleEditorOpen(true)
+      toast({ description: "功能开发中，敬请期待~" })
+    } else {
+      setTemplateNum(index)
+      setStyle(TEMPLATE.style[option.id])
+    }
+  }
 
   return (
     <div
@@ -217,18 +236,7 @@ export const Converter = () => {
           <MenubarContent portalProps={{ container: containerRef.current }}>
             <MenubarRadioGroup
               value={String(templateNum)}
-              onValueChange={(value) => {
-                const index = parseInt(value, 10)
-                setTemplateNum(index)
-                const option = TEMPLATE_OPTIONS[index]
-                if (!option.id) return
-                if (option.id === "custom") {
-                  // 切换自定义自动打开css编辑
-                  // setStyleEditorOpen(true)
-                } else {
-                  setStyle(TEMPLATE.style[option.id])
-                }
-              }}>
+              onValueChange={switchTheme}>
               {TEMPLATE_OPTIONS.map((option, index) => (
                 <MenubarRadioItem key={index} value={String(index)}>
                   {option.name}
@@ -236,7 +244,7 @@ export const Converter = () => {
               ))}
             </MenubarRadioGroup>
             <MenubarSeparator />
-            <MenubarCheckboxItem checked={lookCss} onCheckedChange={setLookCss}>
+            <MenubarCheckboxItem checked={lookCss} onCheckedChange={lookCssTheme}>
               查看主题CSS
             </MenubarCheckboxItem>
           </MenubarContent>
