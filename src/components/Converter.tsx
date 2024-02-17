@@ -1,6 +1,7 @@
 import { ReloadIcon } from "@radix-ui/react-icons"
 import { useLocalStorageState, useMount, useUpdate } from "ahooks"
 import axios from "axios"
+import Cookies from "js-cookie";
 import React, { useMemo, useRef, useState } from "react"
 
 import { sendToBackground } from "@plasmohq/messaging"
@@ -89,6 +90,9 @@ export const Converter = () => {
   }
   const onClick = async () => {
     setLoading(true)
+
+    const userId = Cookies.get("notion_user_id")
+    
     const pageId = extractNotionPageId(window.location.href)
     const res = await axios.post(
       "https://www.notion.so/api/v3/getBacklinksForBlock",
@@ -118,33 +122,47 @@ export const Converter = () => {
       )
       spaceId = res.data.spaceId
     }
-
-    const ret = await axios.post("https://www.notion.so/api/v3/enqueueTask", {
-      task: {
-        eventName: "exportBlock",
-        request: {
-          block: { id: pageId, spaceId },
-          recursive: false,
-          exportOptions: {
-            exportType: "markdown",
-            timeZone: "Asia/Shanghai",
-            locale: "en",
-            // includeContents: "no_files",
-            collectionViewExportType: "currentView"
-          },
-          shouldExportComments: false
-        }
+    const axiosNotion = axios.create({
+      headers: {
+        "Notion-Audit-Log-Platform": "web",
+        "Notion-Client-Version": "23.13.0.109", // TODO 需要改成变量
+        "X-Notion-Active-User-Header": userId,
+        "X-Notion-Space-Id": spaceId
       }
     })
+
+    const ret = await axiosNotion.post(
+      "https://www.notion.so/api/v3/enqueueTask",
+      {
+        task: {
+          eventName: "exportBlock",
+          request: {
+            block: { id: pageId, spaceId },
+            recursive: false,
+            exportOptions: {
+              exportType: "markdown",
+              timeZone: "Asia/Shanghai",
+              locale: "en",
+              // includeContents: "no_files",
+              collectionViewExportType: "currentView"
+            },
+            shouldExportComments: false
+          }
+        }
+      }
+    )
 
     let is_task_in_progress = true
 
     const taskId = ret.data.taskId
 
     while (is_task_in_progress) {
-      const ret = await axios.post("https://www.notion.so/api/v3/getTasks", {
-        taskIds: [taskId]
-      })
+      const ret = await axiosNotion.post(
+        "https://www.notion.so/api/v3/getTasks",
+        {
+          taskIds: [taskId]
+        }
+      )
       const results = ret.data.results
       if (results[0].state === "success") {
         is_task_in_progress = false
@@ -153,7 +171,9 @@ export const Converter = () => {
         // cbs.success && (await cbs.success(results[0]));
       } else if (results[0].state === "failure") {
         is_task_in_progress = false
+        setLoading(false)
         console.error("exportBlock", results[0].error)
+        toast({ variant: "destructive", description: String(results[0].error) })
 
         // cbs.failure && (await cbs.failure(results[0]));
       } else {
@@ -245,7 +265,9 @@ export const Converter = () => {
               ))}
             </MenubarRadioGroup>
             <MenubarSeparator />
-            <MenubarCheckboxItem checked={lookCss} onCheckedChange={lookCssTheme}>
+            <MenubarCheckboxItem
+              checked={lookCss}
+              onCheckedChange={lookCssTheme}>
               查看主题CSS
             </MenubarCheckboxItem>
           </MenubarContent>
@@ -253,7 +275,9 @@ export const Converter = () => {
         <MenubarMenu>
           <MenubarTrigger>内容分发</MenubarTrigger>
           <MenubarContent portalProps={{ container: containerRef.current }}>
-            <MenubarItem disabled={copying} onClick={copyWechat}>微信公众号</MenubarItem>
+            <MenubarItem disabled={copying} onClick={copyWechat}>
+              微信公众号
+            </MenubarItem>
           </MenubarContent>
         </MenubarMenu>
       </Menubar>

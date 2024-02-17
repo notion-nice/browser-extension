@@ -6,6 +6,8 @@ export default `/* 土豪金 */
  * 英文换行 word-break: break-all;
  */
 #nice {
+    font-family: Avenir, "PingFangSC-Light";
+    font-size: 15px;
 }
 
 #nice p {

@@ -6,7 +6,7 @@ export default `/* 红色 */
  * 英文换行 word-break: break-all;
  */
 #nice {
-    font-size: 16px;
+    font-size: 15px;
     line-height: 1.8em;
     letter-spacing: 0em;
 }
