@@ -45,6 +45,7 @@ export const Converter = () => {
   const previewWrapRef = useRef<HTMLDivElement>(null)
   const [lookCss, setLookCss] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [copying, setCopying] = useState(false)
   const [showMd, setShowMd] = useState(false)
   const [mdContent, setContent] = useState("")
   const [mdUrl, setUrl] = useState("")
@@ -162,15 +163,15 @@ export const Converter = () => {
   }
 
   const copyWechat = async () => {
-    setLoading(true)
+    setCopying(true)
     const shadowRoot = document.getElementById(SHADOW_HOST_ID)?.shadowRoot
     if (!shadowRoot) {
-      setLoading(false)
+      setCopying(false)
       return
     }
     const layout = shadowRoot.getElementById(LAYOUT_ID) // 保护现场
     if (!layout) {
-      setLoading(false)
+      setCopying(false)
       return
     }
     const html = layout.innerHTML
@@ -181,7 +182,7 @@ export const Converter = () => {
 
     layout.innerHTML = html // 恢复现场
 
-    setLoading(false)
+    setCopying(false)
   }
   const lookCssTheme = async (checked: boolean) => {
     setLookCss(checked)
@@ -252,7 +253,7 @@ export const Converter = () => {
         <MenubarMenu>
           <MenubarTrigger>内容分发</MenubarTrigger>
           <MenubarContent portalProps={{ container: containerRef.current }}>
-            <MenubarItem onClick={copyWechat}>微信公众号</MenubarItem>
+            <MenubarItem disabled={copying} onClick={copyWechat}>微信公众号</MenubarItem>
           </MenubarContent>
         </MenubarMenu>
       </Menubar>
