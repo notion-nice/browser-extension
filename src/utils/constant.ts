@@ -27,9 +27,17 @@ export const TEMPLATE_OPTIONS = [
     name: "默认主题"
   },
   {
-    id: "fullStackBlue",
-    name: "全栈蓝"
+    id: "richGold",
+    name: "土豪金"
   },
+  {
+    id: "huanxiRed",
+    name: "欢喜红"
+  },
+  // {
+  //   id: "fullStackBlue",
+  //   name: "全栈蓝"
+  // },
   {
     id: "nightPurple",
     name: "凝夜紫"

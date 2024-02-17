@@ -2,7 +2,7 @@
   "name": "notion-nice",
   "displayName": "Notion Nice",
   "version": "0.0.1",
-  "description": "Notion Nice Extension",
+  "description": "Format and distribute Notion content easily. Supports WeChat and more. Enhance your productivity.",
   "author": "SengMitnick. <sengmitnick@163.com>",
   "scripts": {
     "dev": "plasmo dev",
@@ -60,11 +60,9 @@
   },
   "manifest": {
     "host_permissions": [
-      "https://*/*"
+      "*://*.notion.site/*",
+      "*://*.notion.so/*"
     ],
-    "permissions": [
-      "tabs",
-      "downloads"
-    ]
+    "permissions": []
   }
 }

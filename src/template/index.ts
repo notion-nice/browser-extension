@@ -10,6 +10,9 @@ import fullStackBlue from "./markdown/fullStackBlue";
 import nightPurple from "./markdown/nightPurple";
 import extremeBlack from "./markdown/extremeBlack";
 
+import richGold from "./markdown/huanxi/richGold"
+import huanxiRed from "./markdown/huanxi/red";
+
 import atomOneDark from "./code/atomOneDark";
 import atomOneLight from "./code/atomOneLight";
 import github from "./code/github";
@@ -40,6 +43,9 @@ export default {
     fullStackBlue,
     nightPurple,
     extremeBlack,
+    //
+    richGold,
+    huanxiRed
   },
   code: {
     atomOneDark,
