@@ -1,10 +1,8 @@
 import { ReloadIcon } from "@radix-ui/react-icons"
 import { useLocalStorageState, useMount, useUpdate } from "ahooks"
 import axios from "axios"
-import Cookies from "js-cookie";
+import Cookies from "js-cookie"
 import React, { useMemo, useRef, useState } from "react"
-
-import { sendToBackground } from "@plasmohq/messaging"
 
 import { cn } from "~lib/utils"
 import TEMPLATE from "~template"
@@ -79,20 +77,66 @@ export const Converter = () => {
     replaceStyle(MARKDOWN_THEME_ID, style)
   }
   const fetchZip = async (exportURL: string, pageId: string) => {
-    const resp = await sendToBackground({
-      name: "converter",
-      body: { exportURL, pageId }
-    })
-    console.log("fetchZip", resp)
-    setLoading(false)
-    setContent(resp.md)
-    setUrl(resp.url)
+    try {
+      const response = await fetch(exportURL)
+      if (!response.ok) {
+        throw new Error("Failed to download file")
+      }
+
+      // 获取ZIP文件的二进制数据
+      const arrayBuffer = await response.arrayBuffer()
+      const zipData = new Uint8Array(arrayBuffer)
+      const file = new Blob([zipData], { type: "application/octet-stream" })
+
+      const formData = new FormData()
+      formData.append("file", file)
+      formData.append("filename", pageId)
+
+      const resp = await new Promise<{ md: string; url: string }>(
+        (resolve, reject) => {
+          fetch(`${process.env.PLASMO_PUBLIC_WEB_HOST}/api/converter`, {
+            method: "POST",
+            body: formData
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              // 请求成功，处理响应数据
+              if (data.url) {
+                let mdUrl = `/api/files/${data.url}`
+                const lastSlashIndex = mdUrl.lastIndexOf("/")
+                const directoryPath = mdUrl.slice(0, lastSlashIndex + 1)
+                mdUrl = `${process.env.PLASMO_PUBLIC_WEB_HOST}${directoryPath}`
+
+                fetch(
+                  `${process.env.PLASMO_PUBLIC_WEB_HOST}/api/files/${data.url}`
+                )
+                  .then((response) => response.text())
+                  .then((data) => {
+                    resolve({ md: data, url: mdUrl })
+                  })
+              }
+            })
+            .catch((error) => {
+              // 请求失败，处理错误
+              reject(error)
+            })
+        }
+      )
+
+      setLoading(false)
+      setContent(resp.md)
+      setUrl(resp.url)
+    } catch (error) {
+      setLoading(false)
+      console.error("exportBlock", error.message)
+      toast({ variant: "destructive", description: "Error uploading file" })
+    }
   }
   const onClick = async () => {
     setLoading(true)
 
     const userId = Cookies.get("notion_user_id")
-    
+
     const pageId = extractNotionPageId(window.location.href)
     const res = await axios.post(
       "https://www.notion.so/api/v3/getBacklinksForBlock",
