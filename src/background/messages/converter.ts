@@ -31,13 +31,14 @@ const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
         fetch(`${process.env.PLASMO_PUBLIC_WEB_HOST}/api/files/${data.url}`)
           .then((response) => response.text())
           .then((data) => {
-            res.send({ md: data, url: mdUrl })
+            res.send({ ok: true, md: data, url: mdUrl })
           })
       }
     })
     .catch((error) => {
       // 请求失败，处理错误
       console.error("Error uploading file:", error)
+      res.send({ ok: false, error: error.message || "Failed to upload file" })
     })
 }
 
