@@ -22,18 +22,11 @@ const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
     .then((response) => response.json())
     .then((data) => {
       // 请求成功，处理响应数据
-      if (data.url) {
-        let mdUrl = `/${data.url}`
-        const lastSlashIndex = mdUrl.lastIndexOf("/")
-        const directoryPath = mdUrl.slice(0, lastSlashIndex + 1)
-        mdUrl = `${process.env.PLASMO_PUBLIC_COS_HOST}${directoryPath}`
-
-        fetch(`${process.env.PLASMO_PUBLIC_COS_HOST}/${data.url}`)
-          .then((response) => response.text())
-          .then((data) => {
-            res.send({ ok: true, md: data, url: mdUrl })
-          })
-      }
+      res.send({
+        ok: true,
+        md: data.content,
+        url: `${process.env.PLASMO_PUBLIC_COS_HOST}/${data.url}`
+      })
     })
     .catch((error) => {
       // 请求失败，处理错误
