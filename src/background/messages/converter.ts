@@ -25,7 +25,7 @@ const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
       res.send({
         ok: true,
         md: data.content,
-        url: `${process.env.PLASMO_PUBLIC_COS_HOST}/${data.url}`
+        url: `${process.env.PLASMO_PUBLIC_COS_HOST}/${data.url}/`
       })
     })
     .catch((error) => {
