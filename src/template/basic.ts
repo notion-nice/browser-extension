@@ -3,7 +3,6 @@ export default `/*默认样式，最佳实践*/
 /*全局属性*/
 #nice {
   font-size: 16px;
-  color: black;
   padding: 0 10px;
   line-height: 1.6;
   word-spacing: 0px;
@@ -12,7 +11,7 @@ export default `/*默认样式，最佳实践*/
   word-wrap: break-word;
   text-align: left;
   font-family: Optima-Regular, Optima, PingFangSC-light, PingFangTC-light, 'PingFang SC', Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-  margin-top: -10px; /*解决开头空隙过大问题*/
+  /* margin-top: -10px; 解决开头空隙过大问题*/
 }
 
 /*段落*/
@@ -22,7 +21,6 @@ export default `/*默认样式，最佳实践*/
   padding-bottom: 8px;
   margin: 0;
   line-height: 26px;
-  color: black;
 }
 
 /*标题*/
@@ -34,8 +32,8 @@ export default `/*默认样式，最佳实践*/
 #nice h6 {
   margin-top: 30px;
   margin-bottom: 15px;
+  padding: 0px;
   font-weight: bold;
-  color: black;
 }
 #nice h1 {
   font-size: 24px;
@@ -80,7 +78,6 @@ export default `/*默认样式，最佳实践*/
   margin-top: 8px;
   margin-bottom: 8px;
   padding-left: 25px;
-  color: black;
 }
 #nice ul {
   list-style-type: disc;
@@ -98,7 +95,6 @@ export default `/*默认样式，最佳实践*/
   margin-bottom: 5px;
   line-height: 26px;
   text-align: left;
-  color: rgb(1,1,1); /* 只要是纯黑色微信编辑器就会把color这个属性吞掉。。。*/
   font-weight: 500;
 }
 
@@ -108,7 +104,7 @@ export default `/*默认样式，最佳实践*/
   font-size: 0.9em;
   overflow: auto;
   overflow-scrolling: touch;
-  border-left: 3px solid rgba(0, 0, 0, 0.4);
+  border-left: 3px solid #6a737d;
   background: rgba(0, 0, 0, 0.05);
   color: #6a737d;
   padding-top: 10px;
@@ -121,13 +117,11 @@ export default `/*默认样式，最佳实践*/
 
 #nice blockquote p {
   margin: 0px;
-  color: black;
   line-height: 26px;
 }
 
 #nice .table-of-contents a {
   border: none;
-  color: black;
   font-weight: normal;
 }
 
@@ -143,25 +137,21 @@ export default `/*默认样式，最佳实践*/
 /*加粗*/
 #nice strong {
   font-weight: bold;
-  color: black;
 }
 
 /*斜体*/
 #nice em {
   font-style: italic;
-  color: black;
 }
 
 /*加粗斜体*/
 #nice em strong {
   font-weight: bold;
-  color: black;
 }
 
 /*删除线*/
 #nice del {
   font-style: italic;
-  color: black;
 }
 
 /*分隔线*/
@@ -208,7 +198,6 @@ export default `/*默认样式，最佳实践*/
 #nice img {
   display: block;
   margin: 0 auto;
-  width: auto;
   max-width: 100%;
 }
 
@@ -225,6 +214,12 @@ export default `/*默认样式，最佳实践*/
   text-align: center;
   color: #888;
   font-size: 14px;
+}
+
+
+/*表格容器 */
+#nice .table-container{
+  overflow-x: auto;
 }
 
 /*表格*/
@@ -259,66 +254,10 @@ export default `/*默认样式，最佳实践*/
   background-color: #f0f0f0;
 }
 
-/* 微信代码块 */
-#nice .code-snippet__fix {
-  word-wrap: break-word !important;
-  font-size: 14px;
-  margin: 10px 0;
-  display: block;
-  color: #333;
-  position: relative;
-  background-color: rgba(0,0,0,0.03);
-  border: 1px solid #f0f0f0;
-  border-radius: 2px;
-  display: flex;
-  line-height: 20px;
-}
-#nice .code-snippet__fix pre {
-  margin-bottom: 10px;
-  margin-top: 0px;
-}
-#nice .code-snippet__fix .code-snippet__line-index {
-  counter-reset: line;
-  flex-shrink: 0;
-  height: 100%;
-  padding: 1em;
-  list-style-type: none;
-  padding: 16px;
-  margin: 0;
-}
-#nice .code-snippet__fix .code-snippet__line-index li {
-  list-style-type: none;
-  text-align: right;
-  line-height: 26px;
-  color: black;
-  margin: 0;
-}
-#nice .code-snippet__fix .code-snippet__line-index li::before {
-  min-width: 1.5em;
-  text-align: right;
-  left: -2.5em;
-  counter-increment: line;
-  content: counter(line);
-  display: inline;
-  color: rgba(0,0,0,0.3);
-}
-#nice .code-snippet__fix pre {
-  overflow-x: auto;
-  padding: 16px;
-  padding-left: 0;
-  white-space: normal;
-  flex: 1;
-  -webkit-overflow-scrolling: touch;
-}
-#nice .code-snippet__fix code {
-  text-align: left;
-  font-size: 14px;
-  display: block;
-  white-space: pre;
-  display: flex;
-  position: relative;
-  font-family: Consolas,"Liberation Mono",Menlo,Courier,monospace;
-  padding: 0px;
+/* 表格最小列宽4个汉字 */
+#nice table tr th:nth-of-type(n),
+#nice table tr td:nth-of-type(n){
+  min-width:85px;
 }
 
 #nice .footnote-word {
@@ -352,7 +291,6 @@ export default `/*默认样式，最佳实践*/
   padding: 0px;
   margin: 0;
   line-height: 26px;
-  color: black;
   word-break:break-all;
   width: calc(100%-50)
 }
@@ -387,32 +325,147 @@ export default `/*默认样式，最佳实践*/
 }
 
 #nice .imageflow-layer1 {
-  margin: 1em auto;
-  white-space: normal;
+  margin-top: 1em;
+  margin-bottom: 0.5em;
   border: 0px none;
   padding: 0px;
   overflow: hidden;
 }
 
 #nice .imageflow-layer2 {
-  white-space: nowrap;
-  width: 100%;
+  display: flex;
+  flex-wrap: nowrap;
   overflow-x: scroll;
-}
-
-#nice .imageflow-layer3 {
-  display: inline-block;
-  word-wrap: break-word;
-  white-space: normal;
-  vertical-align: middle;
-  width: 100%;
 }
 
 #nice .imageflow-img {
   display: inline-block;
 }
 
+#nice .imageflow-caption {
+  text-align: center;
+  margin-top: 0px;
+  padding-top: 0px;
+  color: #888;
+}
+
 #nice .nice-suffix-juejin-container {
   margin-top: 20px !important;
+}
+
+#nice figure a {
+  border: none;
+}
+
+#nice figure a img {
+  margin: 0px;
+}
+
+#nice figure {
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 图片链接嵌套 */
+#nice figure a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 图片链接嵌套，图片解释 */
+#nice figure a + figcaption {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-top: -35px;
+  background: rgba(0,0,0,0.7);
+  color: white;
+  line-height: 35px;
+  z-index: 20;
+}
+
+/* 容器块1 */
+#nice .block-1 {
+  display: block;
+  background: rgb(250,250,250);
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
+
+#nice .block-1 .multiquote-1 {
+  border: none;
+  background: white;
+  box-shadow: 1px 1px 10px rgba(0,0,0,0.2);
+}
+
+/* 容器块2 */
+#nice .block-2 {
+  display: block;
+  background: rgb(250,250,250);
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
+
+#nice .block-2 h3 {
+  text-align: center;
+}
+
+#nice .block-2 .multiquote-1 {
+  border: none;
+  background: white;
+  box-shadow: 1px 1px 10px rgba(0,0,0,0.2);
+  text-align: center;
+}
+
+/* 容器块3 */
+#nice .block-3 {
+  display: block;
+  background: rgb(250,250,250);
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
+
+#nice .block-3 h3 {
+  text-align: right;
+}
+
+#nice .block-3 .multiquote-1 {
+  border: none;
+  background: white;
+  box-shadow: 1px 1px 10px rgba(0,0,0,0.2);
+  text-align: right;
+}
+
+/* 分列 */
+#nice .column {
+  display: flex
+}
+
+#nice .column .column-left {
+  text-align: center;
+  padding-right: 5px;
+  width: 50%;
+}
+
+#nice .column .column-right {
+  text-align: center;
+  padding-left: 5px;
+  width: 50%;
 }
 `;
