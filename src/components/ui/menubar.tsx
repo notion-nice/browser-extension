@@ -25,7 +25,7 @@ const Menubar = React.forwardRef<
   <MenubarPrimitive.Root
     ref={ref}
     className={cn(
-      "nf-flex nf-h-9 nf-items-center nf-space-x-1 nf-border-b nf-bg-background nf-p-1 nf-shadow-sm",
+      "nf-flex nf-h-9 nf-items-center nf-space-x-1 nf-border-b nf-border-border nf-bg-background nf-p-1 nf-shadow-sm",
       className
     )}
     {...props}
@@ -75,7 +75,7 @@ const MenubarSubContent = React.forwardRef<
   <MenubarPrimitive.SubContent
     ref={ref}
     className={cn(
-      "nf-z-50 nf-min-w-[8rem] nf-overflow-hidden nf-rounded-md nf-border nf-bg-popover nf-p-1 nf-text-popover-foreground nf-shadow-lg data-[state=open]:nf-animate-in data-[state=closed]:nf-animate-out data-[state=closed]:nf-fade-out-0 data-[state=open]:nf-fade-in-0 data-[state=closed]:nf-zoom-out-95 data-[state=open]:nf-zoom-in-95 data-[side=bottom]:nf-slide-in-from-top-2 data-[side=left]:nf-slide-in-from-right-2 data-[side=right]:nf-slide-in-from-left-2 data-[side=top]:nf-slide-in-from-bottom-2",
+      "nf-z-50 nf-min-w-[8rem] nf-overflow-hidden nf-rounded-md nf-border nf-border-border nf-bg-popover nf-p-1 nf-text-popover-foreground nf-shadow-lg data-[state=open]:nf-animate-in data-[state=closed]:nf-animate-out data-[state=closed]:nf-fade-out-0 data-[state=open]:nf-fade-in-0 data-[state=closed]:nf-zoom-out-95 data-[state=open]:nf-zoom-in-95 data-[side=bottom]:nf-slide-in-from-top-2 data-[side=left]:nf-slide-in-from-right-2 data-[side=right]:nf-slide-in-from-left-2 data-[side=top]:nf-slide-in-from-bottom-2",
       className
     )}
     {...props}
@@ -107,7 +107,7 @@ const MenubarContent = React.forwardRef<
         alignOffset={alignOffset}
         sideOffset={sideOffset}
         className={cn(
-          "nf-z-50 nf-min-w-[12rem] nf-overflow-hidden nf-rounded-md nf-border nf-bg-popover nf-p-1 nf-text-popover-foreground nf-shadow-md data-[state=open]:nf-animate-in data-[state=closed]:nf-fade-out-0 data-[state=open]:nf-fade-in-0 data-[state=closed]:nf-zoom-out-95 data-[state=open]:nf-zoom-in-95 data-[side=bottom]:nf-slide-in-from-top-2 data-[side=left]:nf-slide-in-from-right-2 data-[side=right]:nf-slide-in-from-left-2 data-[side=top]:nf-slide-in-from-bottom-2",
+          "nf-z-50 nf-min-w-[12rem] nf-overflow-hidden nf-rounded-md nf-border nf-border-white/20 nf-bg-popover nf-p-1 nf-text-popover-foreground nf-shadow-md data-[state=open]:nf-animate-in data-[state=closed]:nf-fade-out-0 data-[state=open]:nf-fade-in-0 data-[state=closed]:nf-zoom-out-95 data-[state=open]:nf-zoom-in-95 data-[side=bottom]:nf-slide-in-from-top-2 data-[side=left]:nf-slide-in-from-right-2 data-[side=right]:nf-slide-in-from-left-2 data-[side=top]:nf-slide-in-from-bottom-2",
           className
         )}
         {...props}
