@@ -20,6 +20,7 @@ import {
 } from "~utils/constant"
 import {
   copyTextToClipboard,
+  parseLinkToFoot,
   solveHtml,
   solveWeChatMath
 } from "~utils/converter"
@@ -44,11 +45,13 @@ export const Converter = () => {
   const containerRef = useRef<HTMLDivElement>(null)
   const previewContainerRef = useRef<HTMLDivElement>(null)
   const previewWrapRef = useRef<HTMLDivElement>(null)
+  const [showMd, setShowMd] = useState(false)
   const [lookCss, setLookCss] = useState(false)
   const [loading, setLoading] = useState(false)
   const [copying, setCopying] = useState(false)
-  const [showMd, setShowMd] = useState(false)
+  const [linkToFoot, setLinkToFoot] = useState(true)
   const [mdContent, setContent] = useState("")
+  const [mdFootContent, setFootContent] = useState("")
   const [mdUrl, setUrl] = useState("")
   const [templateNum, setTemplateNum] = useLocalStorageState<number>(
     TEMPLATE_NUM,
@@ -60,9 +63,13 @@ export const Converter = () => {
   )
 
   const parseHtml = useMemo(() => {
+    if (linkToFoot) {
+      if (!mdFootContent) return ""
+      return parserMarkdownByWechat(mdFootContent, mdUrl)
+    }
     if (!mdContent) return ""
     return parserMarkdownByWechat(mdContent, mdUrl)
-  }, [mdContent])
+  }, [mdContent, mdFootContent, linkToFoot])
 
   useMount(() => {
     let timer = window.setInterval(() => {
@@ -90,8 +97,9 @@ export const Converter = () => {
         toast({ variant: "destructive", description: resp.error })
         return
       }
-      setContent(resp.md)
       setUrl(resp.url)
+      setContent(resp.md)
+      setFootContent(parseLinkToFoot(resp.md))
     } catch (error) {
       setLoading(false)
       console.error("exportBlock", error)
@@ -259,6 +267,11 @@ export const Converter = () => {
             <MenubarSeparator />
             <MenubarCheckboxItem checked={showMd} onCheckedChange={setShowMd}>
               查看MD内容
+            </MenubarCheckboxItem>
+            <MenubarCheckboxItem
+              checked={linkToFoot}
+              onCheckedChange={setLinkToFoot}>
+              微信外链转脚注
             </MenubarCheckboxItem>
           </MenubarContent>
         </MenubarMenu>

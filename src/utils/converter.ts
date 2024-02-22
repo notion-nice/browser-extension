@@ -110,3 +110,46 @@ export const solveHtml = () => {
 
   return res
 }
+
+export const parseLinkToFoot = (content: string) => {
+  let newContent = handleWechatOuterLink(content)
+  newContent = newContent.replace(/([\u4e00-\u9fa5])\$/g, "$1 $")
+  newContent = newContent.replace(/\$([\u4e00-\u9fa5])/g, "$ $1")
+  return newContent
+}
+
+const handleWechatOuterLink = (content: string) => {
+  const linkImgReg = /(!)*\[.*?\]\(((?!mp.weixin.qq.com).)*?\)/g
+  const res = content.match(linkImgReg) // 匹配到图片、链接和脚注
+
+  if (res === null) {
+    return content
+  }
+
+  const footReg = /.*?\(.*?"(.*?)".*?\)/
+  const filterRes = res.filter((val) => {
+    const comment = val.match(footReg)
+    if (val[0] === "!") {
+      return false
+    }
+    if (comment && comment[1] !== "") {
+      return false
+    }
+    return true
+  }) // 过滤掉图片和脚注
+
+  if (filterRes.length > 0) {
+    filterRes.forEach((val) => {
+      const linkReg = /\[(.*?)\]\((.*?)\)/ // 匹配链接中具体的值
+      const matchValue = val.match(linkReg)
+      const name = matchValue[1]
+      const url = matchValue[2].trim()
+
+      const newVal = `[${name}](${url} "${name}")`
+      content = content.replace(val, newVal)
+    })
+    return content
+  } else {
+    return content
+  }
+}

@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.0.3] - 2024-02-22
+
+### Added
+- 添加了**微信外链转脚注**功能。
+
 ## [0.0.2] - 2024-02-20
 
 ### Changed
