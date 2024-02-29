@@ -24,7 +24,7 @@ import {
   solveHtml,
   solveWeChatMath
 } from "~utils/converter"
-import { parserMarkdownByWechat, replaceStyle } from "~utils/helper"
+import { parserMarkdown, replaceStyle } from "~utils/helper"
 
 import {
   Menubar,
@@ -65,10 +65,10 @@ export const Converter = () => {
   const parseHtml = useMemo(() => {
     if (linkToFoot) {
       if (!mdFootContent) return ""
-      return parserMarkdownByWechat(mdFootContent, mdUrl)
+      return parserMarkdown(mdFootContent, mdUrl)
     }
     if (!mdContent) return ""
-    return parserMarkdownByWechat(mdContent, mdUrl)
+    return parserMarkdown(mdContent, mdUrl)
   }, [mdContent, mdFootContent, linkToFoot])
 
   useMount(() => {

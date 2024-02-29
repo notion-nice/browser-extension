@@ -156,6 +156,15 @@ markdownParser
   .use(markdownItLiReplacer) // li 标签中加入 p 标签
   .use(markdownItImageFlow) // 横屏移动插件
 
+export const parserMarkdown = (
+  mdContent: string,
+  imageHost: string
+): string => {
+  return markdownParser
+    .use(markdownItImgPath, { host: imageHost })
+    .render(mdContent)
+}
+
 export const b64toBlob = (b64Data, contentType = "", sliceSize = 512) => {
   const byteCharacters = atob(b64Data)
   const byteArrays = []

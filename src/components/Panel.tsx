@@ -3,6 +3,7 @@ import { useMount } from "ahooks"
 import TEMPLATE from "~template"
 import {
   BASIC_THEME_ID,
+  CODE_THEME_ID,
   MARKDOWN_THEME_ID,
   STYLE,
   STYLE_LABELS,
@@ -17,6 +18,7 @@ import { Converter } from "./Converter"
 export const Panel = () => {
   useMount(() => {
     let style = ""
+    // let codeStyle = ""
 
     // 如果为空先把数据放进去
     if (!window.localStorage.getItem(STYLE)) {
@@ -44,6 +46,7 @@ export const Panel = () => {
     // 初始化整体主题
     replaceStyle(BASIC_THEME_ID, TEMPLATE.basic)
     replaceStyle(MARKDOWN_THEME_ID, style)
+    replaceStyle(CODE_THEME_ID, TEMPLATE.code.macAtomOneDark)
   })
   return <Converter />
 }
