@@ -217,7 +217,6 @@ export default (md, options) => {
       // return katex.renderToString(latex, options);
       convertOptions.display = false
       const ret = renderMath(latex, documentOptions, convertOptions)
-      console.log("katexInline", latex, ret)
       // return "$" + latex + "$"
       return ret
     } catch (error) {
@@ -238,7 +237,6 @@ export default (md, options) => {
       // return "<p>" + katex.renderToString(latex, options) + "</p>";
       convertOptions.display = true
       const ret = renderMath(latex, documentOptions, convertOptions)
-      console.log("katexBlock", latex, ret)
       // return "$$" + latex + "$$"
 
       return "<p>" + ret + "</p>"

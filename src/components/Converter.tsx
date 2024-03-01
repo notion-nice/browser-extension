@@ -97,9 +97,11 @@ export const Converter = () => {
         toast({ variant: "destructive", description: resp.error })
         return
       }
+      const md = resp.md.replace(/\!\[Untitled\]\(/g, "![](")
+
       setUrl(resp.url)
-      setContent(resp.md)
-      setFootContent(parseLinkToFoot(resp.md))
+      setContent(md)
+      setFootContent(parseLinkToFoot(md))
     } catch (error) {
       setLoading(false)
       console.error("exportBlock", error)
@@ -215,12 +217,17 @@ export const Converter = () => {
     const html = layout.innerHTML
     solveWeChatMath()
     const cpoyHtml = solveHtml()
-    await copyTextToClipboard(cpoyHtml)
-    toast({ description: "已复制，请到微信公众平台粘贴" })
+    console.log("cpoyHtml", cpoyHtml)
+    try {
+      await copyTextToClipboard(cpoyHtml)
+      toast({ description: "已复制，请到微信公众平台粘贴" })
+    } catch (error) {
+      toast({ variant: "destructive", description: "复制失败" })
+    } finally {
+      layout.innerHTML = html // 恢复现场
 
-    layout.innerHTML = html // 恢复现场
-
-    setCopying(false)
+      setCopying(false)
+    }
   }
   const lookCssTheme = async (checked: boolean) => {
     setLookCss(checked)

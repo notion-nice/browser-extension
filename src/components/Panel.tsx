@@ -46,7 +46,7 @@ export const Panel = () => {
     // 初始化整体主题
     replaceStyle(BASIC_THEME_ID, TEMPLATE.basic)
     replaceStyle(MARKDOWN_THEME_ID, style)
-    replaceStyle(CODE_THEME_ID, TEMPLATE.code.macAtomOneDark)
+    replaceStyle(CODE_THEME_ID, TEMPLATE.code.atomOneDark)
   })
   return <Converter />
 }

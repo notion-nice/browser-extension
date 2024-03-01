@@ -21,7 +21,6 @@ function replaceImagePath(md, options) {
     if (srcIndex >= 0) {
       const url = token.attrs[srcIndex][1]
 
-      console.log(url)
       if (isRelativePath(url) && options.host) {
         token.attrs[srcIndex][1] = options.host + url
       }
