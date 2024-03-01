@@ -1,6 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.0.3] - 2024-03-01
+
+### Added
+- 添加了數學公式支持。
+
+### Fixed
+- 修复Clipboar异常问题。
+
 ## [0.0.3] - 2024-02-22
 
 ### Added
