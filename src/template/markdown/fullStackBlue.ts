@@ -4,14 +4,14 @@ export default `/*自定义样式，实时生效*/
 * 页边距 padding:30px;
 * 全文字体 font-family:optima-Regular;
 * 英文换行 word-break:break-all;
-color:#595959;
+color:#2b2b2b;
 */
 #nice {
   line-height: 1.25;
-  color: #595959;
+  color: #2b2b2b;
   font-family: Optima-Regular, Optima, PingFangTC-Light, PingFangSC-light, PingFangTC-light;
   letter-spacing: 2px;
-  background-image: linear-gradient(90deg, rgba(50, 0, 0, 0.05) 3%, rgba(0, 0, 0, 0) 3%), linear-gradient(360deg, rgba(50, 0, 0, 0.05) 3%, rgba(0, 0, 0, 0) 3%);
+  background-image: linear-gradient(90deg, rgba(50, 0, 0, 0.04) 3%, rgba(0, 0, 0, 0) 3%), linear-gradient(360deg, rgba(50, 0, 0, 0.04) 3%, rgba(0, 0, 0, 0) 3%);
   background-size: 20px 20px;
   background-position: center center;
 }
@@ -28,10 +28,10 @@ color:#595959;
 * 首行缩进 text-indent:2em;
 */
 #nice p {
-  color: #595959;
+  color: #2b2b2b;
   margin: 10px 0px;
   letter-spacing: 2px;
-  font-size: 14px;
+  font-size: 15px;
   word-spacing: 2px;
 }
 
@@ -70,7 +70,7 @@ color:#595959;
   width: 20px;
   height: 20px;
   background-size: 20px 20px;
-  background-image:url(https://img.alicdn.com/tfs/TB1iq.pypY7gK0jSZKzXXaikpXa-32-32.png);
+  background-image:url(https://files.mdnice.com/fullstack-1.png);
   margin-bottom: -22px;
 }
 
@@ -94,18 +94,18 @@ color:#595959;
 
 /* 三级标题 */
 #nice h3 {
-  font-size: 16px;
+  font-size: 17px;
   font-weight: bold;
   text-align: center;
   position:relative;
-  margin-top: 50px;
+  margin-top: 20px;
   margin-bottom: 20px;
 }
 
 /* 三级标题内容 */
 #nice h3 .content {
   border-bottom: 2px solid RGBA(79, 177, 249, .65);
-  color: #595959;
+  color: #2b2b2b;
   padding-bottom:2px
 }
 
@@ -114,36 +114,38 @@ color:#595959;
   width:30px;
   height:30px;
   display:block;
-  background-image:url(https://img.alicdn.com/tfs/TB1Hm.xyEz1gK0jSZLeXXb9kVXa-153-153.png);
-  position:absolute;
+  background-image:url(https://files.mdnice.com/fullstack-2.png);
   background-position:center;
   background-size:30px;
-	left:0;
-  right:0;
   margin:auto;
   opacity:1;
   background-repeat:no-repeat;
-  bottom:17px;
+  margin-bottom:-8px;
 }
 
 /* 三级标题修饰 请参考有实例的主题 */
 #nice h3:after {}
 
 #nice h4 .content {
-  font-size: 14px;
+  height:16px;
+  line-height:16px;
+  font-size: 16px;
 }
 
 #nice h4 .content:before{
   content:'';
-  background-image:url(https://img.alicdn.com/tfs/TB1Lc.uyuL2gK0jSZFmXXc7iXXa-32-32.png);
+  background-image:url(https://files.mdnice.com/fullstack-3.png);
   display:inline-block;
   width:16px;
   height:16px;
-  background-size:16px;
-  background-position:center;
+  background-size:100% ;
+  background-position:left bottom;
   background-repeat:no-repeat;
+  width: 16px;
+  height: 15px;
+  line-height:15px;
   margin-right:6px;
-  margin-bottom: -4px;
+  margin-bottom:-2px;
 }
 
 /* 无序列表整体样式
@@ -167,7 +169,7 @@ color:#595959;
 /* 列表内容，不要设置li
 */
 #nice li section {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: normal;
   color: #595959;
 }
@@ -176,7 +178,7 @@ color:#595959;
 * 左边缘颜色 border-left-color:black;
 * 背景色 background:gray;
 */
-#nice blockquote::before {
+#nice .multiquote-1::before {
   content: "❝";
   color: RGBA(64, 184, 250, .5);
   font-size: 34px;
@@ -184,7 +186,7 @@ color:#595959;
   font-weight: 700;
 }
 
-#nice blockquote {
+#nice .multiquote-1 {
   text-size-adjust: 100%;
   line-height: 1.55em;
   font-weight: 400;
@@ -199,11 +201,11 @@ color:#595959;
 
 }
 
-#nice blockquote p {
+#nice .multiquote-1 p {
   color: #595959;
 }
 
-#nice blockquote::after {
+#nice .multiquote-1::after {
   content: "❞";
   float: right;
   color: RGBA(64, 184, 250, .5);
@@ -277,7 +279,7 @@ color:#595959;
 #nice figcaption {
   display: block;
   font-size: 13px;
-  color: #595959;
+  color: #2b2b2b;
 }
 
 #nice figcaption:before{
@@ -298,9 +300,10 @@ color:#595959;
 #nice li code {
   color: #3594F7;
   background: RGBA(59, 170, 250, .1);
-  display:inline-block;
   padding:0 2px;
-  border-radius:2px
+  border-radius:2px;
+  height:21px;
+  line-height:22px;
 }
 
 /* 非微信代码块
@@ -324,14 +327,14 @@ color:#595959;
 */
 #nice table tr th,
 #nice table tr td {
-  font-size: 14px;
+  font-size: 15px;
   color: #595959;
 }
 
 #nice .footnotes {
   background: #F6EEFF;
   padding: 20px 20px 20px 20px;
-  font-size: 14px;
+  font-size: 13px;
   border: 0.8px solid #DEC6FB;
   border-radius: 6px;
   border: 1px solid #DEC6FB;
@@ -351,7 +354,7 @@ color:#595959;
 
 /*脚注链接样式*/
 #nice .footnote-item em {
-  font-size: 14px;
+  font-size: 13px;
   color: #595959;
   display: block;
 }
@@ -359,7 +362,7 @@ color:#595959;
 #nice .footnotes{
   background: RGBA(53, 148, 247, .4);
   padding: 20px 20px 20px 20px;
-  font-size: 14px;
+  font-size: 13px;
   border-radius: 6px;
   border: 1px solid RGBA(53, 148, 247, 1);
 }
@@ -398,4 +401,12 @@ color:#595959;
 
 /* 行内公式
 */
-#nice .inline-equation svg {}`;
+#nice .inline-equation svg {}
+
+/* 滑动图片
+ */
+#nice .imageflow-img {
+  display: inline-block;
+  width:100%;
+  margin-bottom: 0;
+}`;

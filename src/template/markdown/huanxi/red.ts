@@ -1,4 +1,4 @@
-export default `/* 红色 */
+export default `/* 欢喜红 */
 
 /* 全局属性
  * 页边距 padding: 30px;
@@ -6,9 +6,9 @@ export default `/* 红色 */
  * 英文换行 word-break: break-all;
  */
 #nice {
-    font-size: 15px;
-    line-height: 1.8em;
-    letter-spacing: 0em;
+  font-size: 15px;
+  line-height: 1.8em;
+  letter-spacing: 0em;
 }
 
 #nice strong,

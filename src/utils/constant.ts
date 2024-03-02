@@ -34,42 +34,9 @@ export const TEMPLATE_OPTIONS = [
     id: "huanxiRed",
     name: "欢喜红"
   },
-  // {
-  //   id: "fullStackBlue",
-  //   name: "全栈蓝"
-  // },
-  {
-    id: "nightPurple",
-    name: "凝夜紫"
-  },
-  {
-    id: "extremeBlack",
-    name: "极简黑"
-  },
   {
     id: "orangeHeart",
     name: "橙心"
-  },
-  {
-    id: "green",
-    name: "绿意",
-    author: "夜尽天明"
-  },
-  {
-    id: "wechatFormat",
-    name: "WeChat-Format"
-  },
-  {
-    id: "blueCyan",
-    name: "兰青"
-  },
-  {
-    id: "red",
-    name: "红绯"
-  },
-  {
-    id: "blue",
-    name: "蓝莹"
   },
   {
     id: "custom",

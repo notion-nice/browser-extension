@@ -272,9 +272,9 @@ export const Converter = () => {
               重新生成
             </MenubarItem>
             <MenubarSeparator />
-            <MenubarCheckboxItem checked={showMd} onCheckedChange={setShowMd}>
+            {/* <MenubarCheckboxItem checked={showMd} onCheckedChange={setShowMd}>
               查看MD内容
-            </MenubarCheckboxItem>
+            </MenubarCheckboxItem> */}
             <MenubarCheckboxItem
               checked={linkToFoot}
               onCheckedChange={setLinkToFoot}>

@@ -1,8 +1,6 @@
-export default `/*默认样式，最佳实践*/
-
-/*全局属性*/
+export default `
 #nice {
-  font-size: 16px;
+  font-size: 15px;
   padding: 0 10px;
   line-height: 1.6;
   word-spacing: 0px;
@@ -11,19 +9,14 @@ export default `/*默认样式，最佳实践*/
   word-wrap: break-word;
   text-align: left;
   font-family: Optima-Regular, Optima, PingFangSC-light, PingFangTC-light, 'PingFang SC', Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-  /* margin-top: -10px; 解决开头空隙过大问题*/
 }
-
-/*段落*/
 #nice p {
-  font-size: 16px;
+  font-size: 15px;
   padding-top: 8px;
   padding-bottom: 8px;
   margin: 0;
   line-height: 26px;
 }
-
-/*标题*/
 #nice h1,
 #nice h2,
 #nice h3,
@@ -72,7 +65,6 @@ export default `/*默认样式，最佳实践*/
   display: none;
 }
 
-/*列表*/
 #nice ul,
 #nice ol {
   margin-top: 8px;
@@ -98,7 +90,6 @@ export default `/*默认样式，最佳实践*/
   font-weight: 500;
 }
 
-/*引用*/
 #nice blockquote {
   display: block;
   font-size: 0.9em;
@@ -125,7 +116,6 @@ export default `/*默认样式，最佳实践*/
   font-weight: normal;
 }
 
-/*链接*/
 #nice a {
   text-decoration: none;
   color: #1e6bb8;
@@ -134,27 +124,22 @@ export default `/*默认样式，最佳实践*/
   border-bottom: 1px solid #1e6bb8;
 }
 
-/*加粗*/
 #nice strong {
   font-weight: bold;
 }
 
-/*斜体*/
 #nice em {
   font-style: italic;
 }
 
-/*加粗斜体*/
 #nice em strong {
   font-weight: bold;
 }
 
-/*删除线*/
 #nice del {
   font-style: italic;
 }
 
-/*分隔线*/
 #nice hr {
   height: 1px;
   margin: 0;
@@ -164,7 +149,6 @@ export default `/*默认样式，最佳实践*/
   border-top: 1px solid black;
 }
 
-/*代码块*/
 #nice pre {
   margin-top: 10px;
   margin-bottom: 10px;
@@ -173,17 +157,16 @@ export default `/*默认样式，最佳实践*/
   display: -webkit-box;
   font-family: Operator Mono, Consolas, Monaco, Menlo, monospace;
   border-radius: 0px;
-  font-size: 12px;
+  font-size: 13px;
   -webkit-overflow-scrolling: touch;
 }
 #nice pre code span {
   line-height: 26px;
 }
 
-/*行内代码*/
 #nice p code,
 #nice li code {
-  font-size: 14px;
+  font-size: 13px;
   word-wrap: break-word;
   padding: 2px 4px;
   border-radius: 4px;
@@ -194,35 +177,29 @@ export default `/*默认样式，最佳实践*/
   word-break: break-all;
 }
 
-/*图片*/
 #nice img {
   display: block;
   margin: 0 auto;
   max-width: 100%;
 }
 
-/*图片*/
 #nice figure {
   margin: 0;
   margin-top: 10px;
   margin-bottom: 10px;
 }
 
-/*图片描述文字*/
 #nice figcaption {
   margin-top: 5px;
   text-align: center;
   color: #888;
-  font-size: 14px;
+  font-size: 13px;
 }
 
-
-/*表格容器 */
 #nice .table-container{
   overflow-x: auto;
 }
 
-/*表格*/
 #nice table {
   display: table;
   text-align: left;
@@ -243,7 +220,7 @@ export default `/*默认样式，最佳实践*/
 
 #nice table tr th,
 #nice table tr td {
-  font-size: 16px;
+  font-size: 15px;
   border: 1px solid #ccc;
   padding: 5px 10px;
   text-align: left;
@@ -254,7 +231,6 @@ export default `/*默认样式，最佳实践*/
   background-color: #f0f0f0;
 }
 
-/* 表格最小列宽4个汉字 */
 #nice table tr th:nth-of-type(n),
 #nice table tr td:nth-of-type(n){
   min-width:85px;
@@ -276,7 +252,7 @@ export default `/*默认样式，最佳实践*/
 
 #nice .footnote-num {
   display: inline;
-  width: 10%; /*神奇，50px就不可以*/
+  width: 10%;
   background: none;
   font-size: 80%;
   opacity: 0.6;
@@ -286,7 +262,7 @@ export default `/*默认样式，最佳实践*/
 
 #nice .footnote-item p {
   display: inline;
-  font-size: 14px;
+  font-size: 13px;
   width: 90%;
   padding: 0px;
   margin: 0;
@@ -316,12 +292,6 @@ export default `/*默认样式，最佳实践*/
 #nice .block-equation svg {
   max-width: 300% !important;
   -webkit-overflow-scrolling: touch;
-}
-
-#nice .inline-equation {
-}
-
-#nice .inline-equation svg {
 }
 
 #nice .imageflow-layer1 {
@@ -386,86 +356,5 @@ export default `/*默认样式，最佳实践*/
   color: white;
   line-height: 35px;
   z-index: 20;
-}
-
-/* 容器块1 */
-#nice .block-1 {
-  display: block;
-  background: rgb(250,250,250);
-  padding-top: 10px;
-  padding-bottom: 10px;
-  padding-left: 20px;
-  padding-right: 20px;
-  margin-bottom: 20px;
-  margin-top: 20px;
-}
-
-#nice .block-1 .multiquote-1 {
-  border: none;
-  background: white;
-  box-shadow: 1px 1px 10px rgba(0,0,0,0.2);
-}
-
-/* 容器块2 */
-#nice .block-2 {
-  display: block;
-  background: rgb(250,250,250);
-  padding-top: 10px;
-  padding-bottom: 10px;
-  padding-left: 20px;
-  padding-right: 20px;
-  margin-bottom: 20px;
-  margin-top: 20px;
-}
-
-#nice .block-2 h3 {
-  text-align: center;
-}
-
-#nice .block-2 .multiquote-1 {
-  border: none;
-  background: white;
-  box-shadow: 1px 1px 10px rgba(0,0,0,0.2);
-  text-align: center;
-}
-
-/* 容器块3 */
-#nice .block-3 {
-  display: block;
-  background: rgb(250,250,250);
-  padding-top: 10px;
-  padding-bottom: 10px;
-  padding-left: 20px;
-  padding-right: 20px;
-  margin-bottom: 20px;
-  margin-top: 20px;
-}
-
-#nice .block-3 h3 {
-  text-align: right;
-}
-
-#nice .block-3 .multiquote-1 {
-  border: none;
-  background: white;
-  box-shadow: 1px 1px 10px rgba(0,0,0,0.2);
-  text-align: right;
-}
-
-/* 分列 */
-#nice .column {
-  display: flex
-}
-
-#nice .column .column-left {
-  text-align: center;
-  padding-right: 5px;
-  width: 50%;
-}
-
-#nice .column .column-right {
-  text-align: center;
-  padding-left: 5px;
-  width: 50%;
 }
 `;
