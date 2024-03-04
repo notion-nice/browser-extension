@@ -32,7 +32,7 @@ export const Panel = () => {
     if (templateNum === TEMPLATE_CUSTOM_NUM) {
       style = window.localStorage.getItem(STYLE)
     } else {
-      if (templateNum) {
+      if (templateNum && templateNum < TEMPLATE_OPTIONS.length) {
         const { id } = TEMPLATE_OPTIONS[templateNum]
         style = TEMPLATE.style[id]
       } else {

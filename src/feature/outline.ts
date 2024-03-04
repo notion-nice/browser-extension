@@ -26,7 +26,7 @@ const notionScrollerCls = ".notion-frame .notion-scroller.vertical"
 const notionPageContentCls = ".notion-page-content"
 
 // starting point
-export function displayOutline(isShow: boolean) {
+export function displayOutline(isShow: boolean, addBoostStyle: () => void) {
   console.log(`feature: displayOutline: ${isShow}`)
 
   if (isShow) {
@@ -38,7 +38,7 @@ export function displayOutline(isShow: boolean) {
       .then((isPresent) => {
         if (isPresent) {
           // addOutlineFrame();
-
+          addBoostStyle()
           addOutlineToggleBtn()
           addOutline()
           docEditListener()

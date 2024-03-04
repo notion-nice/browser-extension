@@ -1,10 +1,18 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.0.3] - 2024-03-01
+## [0.0.5] - 2024-03-05
+
+### Added
+- 添加了目錄功能，默認打開。
+
+## [0.0.4] - 2024-03-01
 
 ### Added
 - 添加了數學公式支持。
+
+### Changed
+- 优化了主题字号大小，更适合写作。
 
 ### Fixed
 - 修复Clipboar异常问题。
