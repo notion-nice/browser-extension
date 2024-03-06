@@ -1,4 +1,6 @@
 import { ReloadIcon } from "@radix-ui/react-icons"
+import { Elements } from "@stripe/react-stripe-js"
+import { loadStripe } from "@stripe/stripe-js"
 import { useLocalStorageState, useMount, useUpdate } from "ahooks"
 import axios from "axios"
 import Cookies from "js-cookie"
@@ -26,6 +28,7 @@ import {
 } from "~utils/converter"
 import { parserMarkdown, replaceStyle } from "~utils/helper"
 
+import { CheckoutForm } from "./CheckoutForm"
 import {
   Menubar,
   MenubarCheckboxItem,
@@ -45,7 +48,9 @@ export const Converter = () => {
   const containerRef = useRef<HTMLDivElement>(null)
   const previewContainerRef = useRef<HTMLDivElement>(null)
   const previewWrapRef = useRef<HTMLDivElement>(null)
-  const [showMd, setShowMd] = useState(false)
+  const [stripeProps, setStripeProps] = useState({})
+  const [stripePromise, setStripePromise] = useState(null)
+  const [showStripe, setShowStripe] = useState(false)
   const [lookCss, setLookCss] = useState(false)
   const [loading, setLoading] = useState(false)
   const [copying, setCopying] = useState(false)
@@ -202,6 +207,37 @@ export const Converter = () => {
     }
   }
 
+  const upgradePlus = async () => {
+    const axiosStripe = axios.create({
+      baseURL: process.env.PLASMO_PUBLIC_STRIPE_HOST,
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+
+    const { customer } = await axiosStripe
+      .post("/create-customer", { email: "test@example.com" })
+      .then((r) => r.data)
+
+    const customerId = customer.id
+    const { publishableKey, prices } = await axiosStripe
+      .get("/config")
+      .then((r) => r.data)
+
+    if (prices?.[0]?.id) {
+      const priceId = prices[0].id
+      const { clientSecret } = await axiosStripe
+        .post("/create-subscription", { priceId, customerId })
+        .then((r) => r.data)
+      const stripePromise = loadStripe(publishableKey)
+      setShowStripe(true)
+      setStripePromise(stripePromise)
+      setStripeProps({
+        clientSecret
+      })
+    }
+  }
+
   const copyWechat = async () => {
     setCopying(true)
     const shadowRoot = document.getElementById(SHADOW_HOST_ID)?.shadowRoot
@@ -310,26 +346,34 @@ export const Converter = () => {
             </MenubarItem>
           </MenubarContent>
         </MenubarMenu>
+        <MenubarMenu>
+          <MenubarTrigger>账户</MenubarTrigger>
+          <MenubarContent portalProps={{ container: containerRef.current }}>
+            <MenubarItem onClick={upgradePlus}>升级到Plus</MenubarItem>
+          </MenubarContent>
+        </MenubarMenu>
       </Menubar>
 
-      {showMd ? (
-        <pre className="nf-flex-1 nf-px-2 nf-overflow-auto">{mdContent}</pre>
-      ) : (
-        parseHtml && (
-          <div
-            id={BOX_ID}
-            ref={previewContainerRef}
-            className="nf-w-full nf-px-2 nf-flex-1 nf-overflow-y-auto">
-            <section
-              id={LAYOUT_ID}
-              ref={previewWrapRef}
-              className="nf-w-full nf-h-full"
-              data-tool="NotionFlink Preview"
-              data-website="https://notion.flink.top"
-              dangerouslySetInnerHTML={{ __html: parseHtml }}
-            />
-          </div>
-        )
+      {showStripe && (
+        <Elements stripe={stripePromise} options={stripeProps}>
+          <CheckoutForm />
+        </Elements>
+      )}
+
+      {parseHtml && (
+        <div
+          id={BOX_ID}
+          ref={previewContainerRef}
+          className="nf-w-full nf-px-2 nf-flex-1 nf-overflow-y-auto">
+          <section
+            id={LAYOUT_ID}
+            ref={previewWrapRef}
+            className="nf-w-full nf-h-full"
+            data-tool="NotionFlink Preview"
+            data-website="https://notion.flink.top"
+            dangerouslySetInnerHTML={{ __html: parseHtml }}
+          />
+        </div>
       )}
     </div>
   )
