@@ -1,3 +1,13 @@
+// stays on doc change
+
+export const notionFrameCls = ".notion-frame"
+export const outlineFrameCls = ".nb-outline"
+
+// these gets removed on doc change
+export const notionScrollerCls = ".notion-frame .notion-scroller.vertical"
+export const notionPageContentCls = ".notion-page-content"
+
+export const SHADOW_STYLE_ID ="notion-nice-style"
 export const SHADOW_HOST_ID = "notion-nice-content-root"
 export const CONTENT = "nice-content"
 export const STYLE = "nice-style"

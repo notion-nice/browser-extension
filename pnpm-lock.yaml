@@ -20,6 +20,9 @@ dependencies:
   '@plasmohq/messaging':
     specifier: ^0.6.2
     version: 0.6.2(react@18.2.0)
+  '@radix-ui/react-dialog':
+    specifier: ^1.0.5
+    version: 1.0.5(@types/react-dom@18.2.18)(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0)
   '@radix-ui/react-dropdown-menu':
     specifier: ^2.0.6
     version: 2.0.6(@types/react-dom@18.2.18)(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0)
@@ -47,12 +50,6 @@ dependencies:
   '@react-spring/web':
     specifier: ^9.7.3
     version: 9.7.3(react-dom@18.2.0)(react@18.2.0)
-  '@stripe/react-stripe-js':
-    specifier: ^2.5.1
-    version: 2.5.1(@stripe/stripe-js@3.0.7)(react-dom@18.2.0)(react@18.2.0)
-  '@stripe/stripe-js':
-    specifier: ^3.0.7
-    version: 3.0.7
   '@use-gesture/react':
     specifier: ^10.3.0
     version: 10.3.0(react@18.2.0)
@@ -105,8 +102,8 @@ dependencies:
     specifier: ^3.2.2
     version: 3.2.2
   plasmo:
-    specifier: ^0.84.2
-    version: 0.84.2(postcss@8.4.33)(react-dom@18.2.0)(react@18.2.0)
+    specifier: ^0.85.0
+    version: 0.85.0(postcss@8.4.33)(react-dom@18.2.0)(react@18.2.0)
   react:
     specifier: ^18.2.0
     version: 18.2.0
@@ -2220,8 +2217,8 @@ packages:
       - '@parcel/core'
     dev: false
 
-  /@plasmohq/parcel-config@0.40.2(postcss@8.4.33)(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2):
-    resolution: {integrity: sha512-YuE2wxtmMcygz+YC0YZbFRsRp6Vqe+qs+TJs15sn5jKVcOu01RZeKuThKOmcTCc1M6Bcst5OkGsV8RmkpGKKCQ==}
+  /@plasmohq/parcel-config@0.40.3(postcss@8.4.33)(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2):
+    resolution: {integrity: sha512-dYVXJZKRtYGo6oFVirXFw295HAC58F8LrJqq0iVLqvZDo7fr/XPLxnBmSz1MJHCiDsiWM1/j1iywwHlAdHqbJQ==}
     dependencies:
       '@parcel/compressor-raw': 2.9.3(@parcel/core@2.9.3)
       '@parcel/config-default': 2.9.3(@parcel/core@2.9.3)(postcss@8.4.33)(typescript@5.2.2)
@@ -2255,7 +2252,7 @@ packages:
       '@plasmohq/parcel-runtime': 0.23.1
       '@plasmohq/parcel-transformer-inject-env': 0.2.11
       '@plasmohq/parcel-transformer-inline-css': 0.3.11
-      '@plasmohq/parcel-transformer-manifest': 0.17.9
+      '@plasmohq/parcel-transformer-manifest': 0.18.0
       '@plasmohq/parcel-transformer-svelte': 0.5.2
       '@plasmohq/parcel-transformer-vue': 0.5.0(react-dom@18.2.0)(react@18.2.0)
     transitivePeerDependencies:
@@ -2447,8 +2444,8 @@ packages:
       lightningcss: 1.21.8
     dev: false
 
-  /@plasmohq/parcel-transformer-manifest@0.17.9:
-    resolution: {integrity: sha512-syL5AbC7sKCNd6jpNU6qKdeUVWUDhiWLoHC5IYTVGcdVjKBql6lgs+e2JehjNB1BYW2lTrY5v3lI26Z6P6+/9Q==}
+  /@plasmohq/parcel-transformer-manifest@0.18.0:
+    resolution: {integrity: sha512-6X6ubo37Ic7u1y3MjY+vt23Gb3ULtOsH1MbKw3jZMiG8nLGXqXRfiHSyNxJWAdpk7N7ASE8dHnZ+5g3E57bldA==}
     engines: {parcel: '>= 2.7.0'}
     dependencies:
       '@mischnic/json-sourcemap': 0.1.0
@@ -2637,6 +2634,40 @@ packages:
       '@babel/runtime': 7.23.8
       '@types/react': 18.2.48
       react: 18.2.0
+    dev: false
+
+  /@radix-ui/react-dialog@1.0.5(@types/react-dom@18.2.18)(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-GjWJX/AUpB703eEBanuBnIWdIXg6NvJFCXcNlSZk4xdszCdhrJgBoUd1cGk67vFO+WdA2pfI/plOpqz/5GUP6Q==}
+    peerDependencies:
+      '@types/react': '*'
+      '@types/react-dom': '*'
+      react: ^16.8 || ^17.0 || ^18.0
+      react-dom: ^16.8 || ^17.0 || ^18.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      '@types/react-dom':
+        optional: true
+    dependencies:
+      '@babel/runtime': 7.23.8
+      '@radix-ui/primitive': 1.0.1
+      '@radix-ui/react-compose-refs': 1.0.1(@types/react@18.2.48)(react@18.2.0)
+      '@radix-ui/react-context': 1.0.1(@types/react@18.2.48)(react@18.2.0)
+      '@radix-ui/react-dismissable-layer': 1.0.5(@types/react-dom@18.2.18)(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-focus-guards': 1.0.1(@types/react@18.2.48)(react@18.2.0)
+      '@radix-ui/react-focus-scope': 1.0.4(@types/react-dom@18.2.18)(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-id': 1.0.1(@types/react@18.2.48)(react@18.2.0)
+      '@radix-ui/react-portal': 1.0.4(@types/react-dom@18.2.18)(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-presence': 1.0.1(@types/react-dom@18.2.18)(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-primitive': 1.0.3(@types/react-dom@18.2.18)(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-slot': 1.0.2(@types/react@18.2.48)(react@18.2.0)
+      '@radix-ui/react-use-controllable-state': 1.0.1(@types/react@18.2.48)(react@18.2.0)
+      '@types/react': 18.2.48
+      '@types/react-dom': 18.2.18
+      aria-hidden: 1.2.3
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      react-remove-scroll: 2.5.5(@types/react@18.2.48)(react@18.2.0)
     dev: false
 
   /@radix-ui/react-direction@1.0.1(@types/react@18.2.48)(react@18.2.0):
@@ -3353,24 +3384,6 @@ packages:
   /@sindresorhus/is@5.6.0:
     resolution: {integrity: sha512-TV7t8GKYaJWsn00tFDqBw8+Uqmr8A0fRU1tvTQhyZzGv0sJCGRQL3JGMI3ucuKo3XIZdUP+Lx7/gh2t3lewy7g==}
     engines: {node: '>=14.16'}
-    dev: false
-
-  /@stripe/react-stripe-js@2.5.1(@stripe/stripe-js@3.0.7)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-95BwDhOkl1TwIn5sldWW35GYt6wx+uYuwGjebaMOpOdHGyBKcDnBhTjIww+bUdmA2oCmpUqKnoB4OZJuqK8tJA==}
-    peerDependencies:
-      '@stripe/stripe-js': ^1.44.1 || ^2.0.0 || ^3.0.0
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0
-      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
-    dependencies:
-      '@stripe/stripe-js': 3.0.7
-      prop-types: 15.8.1
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-    dev: false
-
-  /@stripe/stripe-js@3.0.7:
-    resolution: {integrity: sha512-qmjTsxnst84iWDsGqPxk5Wlff/fG4nSFjy/r24t9WWFAlCuvwnuUAe4eGgbqZBng019AtgWvo8wuhM3Y5/olbw==}
-    engines: {node: '>=12.16'}
     dev: false
 
   /@svgr/babel-plugin-add-jsx-attribute@6.5.1(@babel/core@7.23.7):
@@ -6598,8 +6611,8 @@ packages:
     resolution: {integrity: sha512-saLsH7WeYYPiD25LDuLRRY/i+6HaPYr6G1OUlN39otzkSTxKnubR9RTxS3/Kk50s1g2JTgFwWQDQyplC5/SHZg==}
     engines: {node: '>= 6'}
 
-  /plasmo@0.84.2(postcss@8.4.33)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-9fyuQubUdYOHEs7plvppB7tPfyqTpA1UlWEYUGeVOgKQ6/rhvpvjBLCWyhzy/S3CrzXL8nZ7HQ1xHka4Coe0PA==}
+  /plasmo@0.85.0(postcss@8.4.33)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-sBhMWAlhgqYyHrvXm/3MzTMUONndNoTj46y0sWaYDMDKcawr7KBf6Qpi1HxsCW2yYcgQjbyFrmUAo1vLqwOn8g==}
     hasBin: true
     dependencies:
       '@expo/spawn-async': 1.7.2
@@ -6608,7 +6621,7 @@ packages:
       '@parcel/package-manager': 2.9.3(@parcel/core@2.9.3)
       '@parcel/watcher': 2.2.0
       '@plasmohq/init': 0.7.0
-      '@plasmohq/parcel-config': 0.40.2(postcss@8.4.33)(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2)
+      '@plasmohq/parcel-config': 0.40.3(postcss@8.4.33)(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2)
       '@plasmohq/parcel-core': 0.1.8
       buffer: 6.0.3
       chalk: 5.3.0
@@ -6812,14 +6825,6 @@ packages:
   /process@0.11.10:
     resolution: {integrity: sha512-cdGef/drWFoydD1JsMzuFf8100nZl+GT+yacc2bEced5f9Rjk4z+WtFUTBu9PhOi9j/jfmBPu0mMEY4wIdAF8A==}
     engines: {node: '>= 0.6.0'}
-    dev: false
-
-  /prop-types@15.8.1:
-    resolution: {integrity: sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==}
-    dependencies:
-      loose-envify: 1.4.0
-      object-assign: 4.1.1
-      react-is: 16.13.1
     dev: false
 
   /proto-list@1.2.4:

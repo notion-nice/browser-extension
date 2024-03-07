@@ -8,6 +8,12 @@ import {
   removePageChangeListener,
   toElement
 } from "~utility"
+import {
+  notionFrameCls,
+  notionPageContentCls,
+  notionScrollerCls,
+  outlineFrameCls
+} from "~utils/constant"
 
 let pageChangeObserverObj: MutationObserver | null = null
 let docEditObserverObj: MutationObserver | null = null
@@ -16,14 +22,6 @@ let docEditObserverObj: MutationObserver | null = null
 const DEBUG = false
 
 // keep classes in hierarchy of DOM
-
-// stays on doc change
-const notionFrameCls = ".notion-frame"
-const outlineFrameCls = ".nb-outline"
-
-// these gets removed on doc change
-const notionScrollerCls = ".notion-frame .notion-scroller.vertical"
-const notionPageContentCls = ".notion-page-content"
 
 // starting point
 export function displayOutline(isShow: boolean, addBoostStyle: () => void) {
