@@ -5,7 +5,7 @@ import { useEffect, useState } from "react"
 import { MenuFold, Panel } from "~components"
 import { Toaster } from "~components/ui/toaster"
 import { getElement, onElementLoaded } from "~utility"
-import { notionFrameCls, SHADOW_HOST_ID } from "~utils/constant"
+import { SHADOW_HOST_ID } from "~utils/constant"
 
 export const config: PlasmoCSConfig = {
   matches: ["https://www.notion.so/*"]
@@ -18,14 +18,15 @@ export const getStyle = () => {
   return style
 }
 
+const notionAppCls = ".notion-app-inner"
 const PlasmoOverlay = ({}: PlasmoCSUIProps) => {
   const [themeType, setThemeType] = useState<"light" | "dark">()
 
   useEffect(() => {
     let observer: MutationObserver | null = null
-    onElementLoaded(notionFrameCls).then((isPresent) => {
+    onElementLoaded(notionAppCls).then((isPresent) => {
       if (isPresent) {
-        const targetNode: HTMLDivElement = getElement(notionFrameCls)
+        const targetNode: HTMLDivElement = getElement(notionAppCls)
 
         function cb() {
           // 检查 class 是否包含暗主题或亮主题
