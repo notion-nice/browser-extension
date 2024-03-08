@@ -1,6 +1,6 @@
-import * as React from "react"
 import * as DialogPrimitive from "@radix-ui/react-dialog"
 import { Cross2Icon } from "@radix-ui/react-icons"
+import * as React from "react"
 
 import { cn } from "~lib/utils"
 
@@ -27,11 +27,17 @@ const DialogOverlay = React.forwardRef<
 ))
 DialogOverlay.displayName = DialogPrimitive.Overlay.displayName
 
+export type DialogContentProps = React.ComponentPropsWithoutRef<
+  typeof DialogPrimitive.Content
+> & {
+  portalProps?: DialogPrimitive.DialogPortalProps
+}
+
 const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
->(({ className, children, ...props }, ref) => (
-  <DialogPortal>
+  DialogContentProps
+>(({ className, children, portalProps, ...props }, ref) => (
+  <DialogPortal {...portalProps}>
     <DialogOverlay />
     <DialogPrimitive.Content
       ref={ref}
@@ -39,8 +45,7 @@ const DialogContent = React.forwardRef<
         "nf-fixed nf-left-[50%] nf-top-[50%] nf-z-50 nf-grid nf-w-full nf-max-w-lg nf-translate-x-[-50%] nf-translate-y-[-50%] nf-gap-4 nf-border nf-bg-background nf-p-6 nf-shadow-lg nf-duration-200 data-[state=open]:nf-animate-in data-[state=closed]:nf-animate-out data-[state=closed]:nf-fade-out-0 data-[state=open]:nf-fade-in-0 data-[state=closed]:nf-zoom-out-95 data-[state=open]:nf-zoom-in-95 data-[state=closed]:nf-slide-out-to-left-1/2 data-[state=closed]:nf-slide-out-to-top-[48%] data-[state=open]:nf-slide-in-from-left-1/2 data-[state=open]:nf-slide-in-from-top-[48%] sm:nf-rounded-lg",
         className
       )}
-      {...props}
-    >
+      {...props}>
       {children}
       <DialogPrimitive.Close className="nf-absolute nf-right-4 nf-top-4 nf-rounded-sm nf-opacity-70 nf-ring-offset-background nf-transition-opacity hover:nf-opacity-100 focus:nf-outline-none focus:nf-ring-2 focus:nf-ring-ring focus:nf-ring-offset-2 disabled:nf-pointer-events-none data-[state=open]:nf-bg-accent data-[state=open]:nf-text-muted-foreground">
         <Cross2Icon className="nf-h-4 nf-w-4" />
@@ -116,5 +121,5 @@ export {
   DialogHeader,
   DialogFooter,
   DialogTitle,
-  DialogDescription,
+  DialogDescription
 }

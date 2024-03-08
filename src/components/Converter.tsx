@@ -38,6 +38,7 @@ import {
   MenubarTrigger
 } from "./ui/menubar"
 import { useToast } from "./ui/use-toast"
+import { Upgrade } from "./Upgrade"
 
 export const Converter = () => {
   const { toast } = useToast()
@@ -201,33 +202,6 @@ export const Converter = () => {
     }
   }
 
-  const upgradePlus = async () => {
-    ;async () => {
-      const baseURL = process.env.PLASMO_PUBLIC_STRIPE_HOST
-      const axiosStripe = axios.create({
-        baseURL,
-        headers: {
-          "Content-Type": "application/json"
-        }
-      })
-
-      const { customer } = await axiosStripe
-        .post("/create-customer", { email: "test@example.com" })
-        .then((r) => r.data)
-
-      const customerId = customer.id
-
-      const { clientSecret } = await axiosStripe
-        .post("/create-payment-intent", {
-          amount: 49 * 100,
-          currency: "hkd",
-          customerId
-        })
-        .then((r) => r.data)
-      window.open(`${baseURL}/pay/${clientSecret}`, "_blank")
-    }
-  }
-
   const copyWechat = async () => {
     setCopying(true)
     const shadowRoot = document.getElementById(SHADOW_HOST_ID)?.shadowRoot
@@ -336,14 +310,8 @@ export const Converter = () => {
             </MenubarItem>
           </MenubarContent>
         </MenubarMenu>
-        <MenubarMenu>
-          <MenubarTrigger>账户</MenubarTrigger>
-          <MenubarContent portalProps={{ container: containerRef.current }}>
-            <MenubarItem onClick={upgradePlus}>升级到Plus</MenubarItem>
-          </MenubarContent>
-        </MenubarMenu>
       </Menubar>
-
+      <Upgrade portalProps={{ container: containerRef.current }} />
       {parseHtml && (
         <div
           id={BOX_ID}
