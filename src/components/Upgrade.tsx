@@ -1,13 +1,13 @@
 import { useMount } from "ahooks"
 import axios from "axios"
 import Cookies from "js-cookie"
-import React, { useState } from "react"
+import React, { useContext, useState } from "react"
 
+import { ThemeContext } from "./ThemeContext"
 import { Button } from "./ui/button"
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -17,6 +17,7 @@ import {
 export const Upgrade = ({
   portalProps
 }: Pick<DialogContentProps, "portalProps">) => {
+  const theme = useContext(ThemeContext)
   const [paymentUrl, setPaymentUrl] = useState("")
   useMount(async () => {
     const userId = Cookies.get("notion_user_id")
@@ -44,29 +45,27 @@ export const Upgrade = ({
       .post("/create-payment", { userId, email: user.email, name: user.name })
       .then((r) => r.data)
 
-    setPaymentUrl(`${baseURL}/pay/${customerId}`)
+    setPaymentUrl(`${baseURL}/pay/${customerId}/${theme}`)
   })
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline">升级到Plus</Button>
+        <Button variant="link">升级到Plus</Button>
       </DialogTrigger>
-      <DialogContent portalProps={portalProps}>
+      <DialogContent portalProps={portalProps} >
         <DialogHeader>
           <DialogTitle>升级到Plus</DialogTitle>
-          <DialogDescription>升级到Plus</DialogDescription>
+          {/* <DialogDescription>升级到Plus</DialogDescription> */}
         </DialogHeader>
-        {paymentUrl && (
-          <iframe
-            src={paymentUrl}
-            frameBorder="no"
-            marginWidth={0}
-            marginHeight={0}
-            scrolling="no"
-            allowTransparency
-            className="nf-w-full nf-h-[460px] nf-border-none"
-          />
-        )}
+        <div className="nf-w-full nf-h-[460px]">
+          {paymentUrl && (
+            <iframe
+              src={paymentUrl}
+              allowTransparency
+              className="nf-w-full nf-h-full nf-border-none"
+            />
+          )}
+        </div>
       </DialogContent>
     </Dialog>
   )

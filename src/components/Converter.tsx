@@ -310,8 +310,10 @@ export const Converter = () => {
             </MenubarItem>
           </MenubarContent>
         </MenubarMenu>
+        <div className="nf-flex-1"></div>
+        <Upgrade portalProps={{ container: containerRef.current }} />
       </Menubar>
-      <Upgrade portalProps={{ container: containerRef.current }} />
+
       {parseHtml && (
         <div
           id={BOX_ID}

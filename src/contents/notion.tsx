@@ -3,6 +3,7 @@ import type { PlasmoCSConfig, PlasmoCSUIProps } from "plasmo"
 import { useEffect, useState } from "react"
 
 import { MenuFold, Panel } from "~components"
+import { ThemeContext, type ThemeType } from "~components/ThemeContext"
 import { Toaster } from "~components/ui/toaster"
 import { getElement, onElementLoaded } from "~utility"
 import { SHADOW_HOST_ID } from "~utils/constant"
@@ -20,7 +21,7 @@ export const getStyle = () => {
 
 const notionAppCls = ".notion-app-inner"
 const PlasmoOverlay = ({}: PlasmoCSUIProps) => {
-  const [themeType, setThemeType] = useState<"light" | "dark">()
+  const [themeType, setThemeType] = useState<ThemeType>()
 
   useEffect(() => {
     let observer: MutationObserver | null = null
@@ -74,12 +75,14 @@ const PlasmoOverlay = ({}: PlasmoCSUIProps) => {
   if (!themeType) return null
 
   return (
-    <div id="notion-flink-app" className={themeType}>
-      <MenuFold>
-        <Panel />
-      </MenuFold>
-      <Toaster />
-    </div>
+    <ThemeContext.Provider value={themeType}>
+      <div id="notion-flink-app" className={themeType}>
+        <MenuFold>
+          <Panel />
+        </MenuFold>
+        <Toaster />
+      </div>
+    </ThemeContext.Provider>
   )
 }
 
