@@ -45,14 +45,14 @@ export const Upgrade = ({
       .post("/create-payment", { userId, email: user.email, name: user.name })
       .then((r) => r.data)
 
-    setPaymentUrl(`${baseURL}/pay/${customerId}/${theme}`)
+    setPaymentUrl(`${baseURL}/pay/${customerId}/`)
   })
   return (
     <Dialog>
       <DialogTrigger asChild>
         <Button variant="link">升级到Plus</Button>
       </DialogTrigger>
-      <DialogContent portalProps={portalProps} >
+      <DialogContent portalProps={portalProps}>
         <DialogHeader>
           <DialogTitle>升级到Plus</DialogTitle>
           {/* <DialogDescription>升级到Plus</DialogDescription> */}
@@ -60,7 +60,7 @@ export const Upgrade = ({
         <div className="nf-w-full nf-h-[460px]">
           {paymentUrl && (
             <iframe
-              src={paymentUrl}
+              src={paymentUrl + theme}
               allowTransparency
               className="nf-w-full nf-h-full nf-border-none"
             />
