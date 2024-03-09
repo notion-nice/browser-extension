@@ -8,7 +8,6 @@ import { sendToBackground } from "@plasmohq/messaging"
 
 import { cn } from "~lib/utils"
 import TEMPLATE from "~template"
-import { extractNotionPageId } from "~utility"
 import {
   BOX_ID,
   LAYOUT_ID,
@@ -25,6 +24,7 @@ import {
   solveWeChatMath
 } from "~utils/converter"
 import { parserMarkdown, replaceStyle } from "~utils/helper"
+import { exportBlock } from "~utils/notion"
 
 import {
   Menubar,
@@ -108,97 +108,34 @@ export const Converter = () => {
       toast({ variant: "destructive", description: "Error uploading file" })
     }
   }
+  const regenerate = async () => {
+    setLoading(true)
+
+    try {
+      const { exportURL, pageId } = await exportBlock({
+        exportType: "html"
+      })
+      console.log(pageId, exportURL)
+
+      // fetchZip(exportURL, pageId)
+    } catch (error) {
+      toast({ variant: "destructive", description: error.message })
+    } finally {
+      setLoading(false)
+    }
+  }
   const onClick = async () => {
     setLoading(true)
 
-    const userId = Cookies.get("notion_user_id")
-
-    const pageId = extractNotionPageId(window.location.href)
-    const res = await axios.post(
-      "https://www.notion.so/api/v3/getBacklinksForBlock",
-      { block: { id: pageId } }
-    )
-    let spaceId = ""
-    if (!!res.data.recordMap.space) {
-      spaceId = Object.keys(res.data.recordMap.space)[0]
-    } else {
-      // res.data.recordMap.space 不存在的時候需要請求其他API以获取spaceId
-      const res = await axios.post(
-        "https://www.notion.so/api/v3/getPublicPageData",
-        {
-          type: "block-space",
-          name: "page",
-          blockId: pageId,
-          requestedOnPublicDomain: false,
-          showMoveTo: false,
-          saveParent: false,
-          shouldDuplicate: false,
-          projectManagementLaunch: false,
-          configureOpenInDesktopApp: false,
-          mobileData: {
-            isPush: false
-          }
-        }
-      )
-      spaceId = res.data.spaceId
-    }
-    const axiosNotion = axios.create({
-      headers: {
-        "Notion-Audit-Log-Platform": "web",
-        "Notion-Client-Version": "23.13.0.109", // TODO 需要改成变量
-        "X-Notion-Active-User-Header": userId,
-        "X-Notion-Space-Id": spaceId
-      }
-    })
-
-    const ret = await axiosNotion.post(
-      "https://www.notion.so/api/v3/enqueueTask",
-      {
-        task: {
-          eventName: "exportBlock",
-          request: {
-            block: { id: pageId, spaceId },
-            recursive: false,
-            exportOptions: {
-              exportType: "markdown",
-              timeZone: "Asia/Shanghai",
-              locale: "en",
-              // includeContents: "no_files",
-              collectionViewExportType: "currentView"
-            },
-            shouldExportComments: false
-          }
-        }
-      }
-    )
-
-    let is_task_in_progress = true
-
-    const taskId = ret.data.taskId
-
-    while (is_task_in_progress) {
-      const ret = await axiosNotion.post(
-        "https://www.notion.so/api/v3/getTasks",
-        {
-          taskIds: [taskId]
-        }
-      )
-      const results = ret.data.results
-      if (results[0].state === "success") {
-        is_task_in_progress = false
-        fetchZip(results[0].status.exportURL, pageId)
-
-        // cbs.success && (await cbs.success(results[0]));
-      } else if (results[0].state === "failure") {
-        is_task_in_progress = false
-        setLoading(false)
-        console.error("exportBlock", results[0].error)
-        toast({ variant: "destructive", description: String(results[0].error) })
-
-        // cbs.failure && (await cbs.failure(results[0]));
-      } else {
-        // cbs.in_progress && (await cbs.in_progress(results[0]));
-      }
+    try {
+      const { exportURL, pageId } = await exportBlock({
+        exportType: "markdown"
+      })
+      fetchZip(exportURL, pageId)
+    } catch (error) {
+      toast({ variant: "destructive", description: error.message })
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -270,6 +207,15 @@ export const Converter = () => {
                 )}
               />
               重新生成
+            </MenubarItem>
+            <MenubarItem onClick={regenerate} disabled={loading}>
+              <ReloadIcon
+                className={cn(
+                  "nf-mr-2 nf-h-4 nf-w-4",
+                  loading && "nf-animate-spin"
+                )}
+              />
+              重新生成【Dev】
             </MenubarItem>
             <MenubarSeparator />
             {/* <MenubarCheckboxItem checked={showMd} onCheckedChange={setShowMd}>

@@ -226,26 +226,3 @@ export function simulateKey(key) {
   }
 }
 
-export function extractNotionPageId(url: string): string | null {
-  // 尝试匹配直接在路径中的页面ID
-  const directMatch = url.match(/notion\.so\/.*?([a-f0-9]{32})/);
-  if (directMatch && directMatch[1]) {
-    return formatPageId(directMatch[1]);
-  }
-
-  // 尝试匹配作为查询参数的页面ID
-  const urlObj = new URL(url);
-  const pageIdParam = urlObj.searchParams.get('p');
-  if (pageIdParam) {
-    return formatPageId(pageIdParam);
-  }
-
-  // 如果没有找到匹配项，返回null
-  return null;
-}
-
-// 新增一个函数来格式化页面ID
-function formatPageId(pageId: string): string {
-  // 使用正则表达式插入破折号
-  return pageId.replace(/^([a-f0-9]{8})([a-f0-9]{4})([a-f0-9]{4})([a-f0-9]{4})([a-f0-9]{12})$/, '$1-$2-$3-$4-$5');
-}
