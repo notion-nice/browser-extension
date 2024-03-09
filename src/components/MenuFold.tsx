@@ -85,7 +85,7 @@ export const MenuFold = ({ children }: PropsWithChildren) => {
   return (
     <>
       <animated.div
-        className="nf-fixed nf-right-0 nf-top-0 nf-h-full nf-bg-background nf-text-foreground"
+        className="nf-fixed nf-right-0 nf-top-0 nf-z-50 nf-h-full nf-bg-background nf-text-foreground"
         style={spring}>
         <div
           className={"nf-h-full nf-overflow-hidden nf-border-solid nf-border-l nf-border-border"}
