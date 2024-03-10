@@ -4,7 +4,10 @@ import Cookies from "js-cookie"
 type MapInfo = [AxiosInstance, string, string]
 type UserInfo = {}
 type ExportBlockRet = { exportURL: string; taskId: string; pageId: string }
-type ExportOptions = { exportType: "markdown" | "html" }
+type ExportOptions = {
+  exportType: "markdown" | "html"
+  includeContents?: "no_files"
+}
 
 const notionClientVersion = "23.13.0.109"
 const pageMap = new Map<string, MapInfo>()
@@ -94,6 +97,7 @@ const getAxiosNotion = async () => {
   }
 
   const _axiosNotion = axios.create({
+    baseURL: "https://www.notion.so/api/v3",
     headers: {
       "Notion-Audit-Log-Platform": "web",
       "Notion-Client-Version": notionClientVersion,

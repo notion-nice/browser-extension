@@ -1,7 +1,6 @@
 import { ReloadIcon } from "@radix-ui/react-icons"
 import { useLocalStorageState, useMount, useUpdate } from "ahooks"
-import axios from "axios"
-import Cookies from "js-cookie"
+import less from "less"
 import React, { useMemo, useRef, useState } from "react"
 
 import { sendToBackground } from "@plasmohq/messaging"
@@ -9,7 +8,9 @@ import { sendToBackground } from "@plasmohq/messaging"
 import { cn } from "~lib/utils"
 import TEMPLATE from "~template"
 import {
+  BASIC_THEME_ID,
   BOX_ID,
+  CODE_THEME_ID,
   LAYOUT_ID,
   MARKDOWN_THEME_ID,
   SHADOW_HOST_ID,
@@ -35,6 +36,9 @@ import {
   MenubarRadioGroup,
   MenubarRadioItem,
   MenubarSeparator,
+  MenubarSub,
+  MenubarSubContent,
+  MenubarSubTrigger,
   MenubarTrigger
 } from "./ui/menubar"
 import { useToast } from "./ui/use-toast"
@@ -50,6 +54,7 @@ export const Converter = () => {
   const [loading, setLoading] = useState(false)
   const [copying, setCopying] = useState(false)
   const [linkToFoot, setLinkToFoot] = useState(true)
+  const [htmlContent, setHtmlContent] = useState("")
   const [mdContent, setContent] = useState("")
   const [mdFootContent, setFootContent] = useState("")
   const [mdUrl, setUrl] = useState("")
@@ -63,13 +68,14 @@ export const Converter = () => {
   )
 
   const parseHtml = useMemo(() => {
+    if (htmlContent) return htmlContent
     if (linkToFoot) {
       if (!mdFootContent) return ""
       return parserMarkdown(mdFootContent, mdUrl)
     }
     if (!mdContent) return ""
     return parserMarkdown(mdContent, mdUrl)
-  }, [mdContent, mdFootContent, linkToFoot])
+  }, [mdContent, mdFootContent, linkToFoot, htmlContent])
 
   useMount(() => {
     let timer = window.setInterval(() => {
@@ -113,10 +119,38 @@ export const Converter = () => {
 
     try {
       const { exportURL, pageId } = await exportBlock({
-        exportType: "html"
+        exportType: "html",
+        includeContents: "no_files"
       })
-      console.log(pageId, exportURL)
+      const resp = await sendToBackground({
+        name: "html",
+        body: { exportURL, pageId }
+      })
 
+      setLoading(false)
+      if (!resp.ok) {
+        console.error("exportBlock", resp.error)
+        toast({ variant: "destructive", description: resp.error })
+        return
+      }
+
+      // 创建一个DOMParser实例
+      const parser = new DOMParser()
+
+      // 使用DOMParser解析HTML字符串
+      const doc = parser.parseFromString(resp.html, "text/html")
+
+      // 提取style和body
+      const style = doc.querySelector("style").innerText
+      const article = doc.querySelector("article .page-body").innerHTML
+
+      const output = await less.render(`#nice { ${style} }`)
+
+      console.log("exportBlock", article, output.css)
+      setHtmlContent(article)
+      replaceStyle(BASIC_THEME_ID, output.css)
+      replaceStyle(MARKDOWN_THEME_ID, "")
+      replaceStyle(CODE_THEME_ID, "")
       // fetchZip(exportURL, pageId)
     } catch (error) {
       toast({ variant: "destructive", description: error.message })
@@ -126,16 +160,14 @@ export const Converter = () => {
   }
   const onClick = async () => {
     setLoading(true)
-
     try {
       const { exportURL, pageId } = await exportBlock({
         exportType: "markdown"
       })
       fetchZip(exportURL, pageId)
     } catch (error) {
-      toast({ variant: "destructive", description: error.message })
-    } finally {
       setLoading(false)
+      toast({ variant: "destructive", description: error.message })
     }
   }
 
@@ -208,15 +240,21 @@ export const Converter = () => {
               />
               重新生成
             </MenubarItem>
-            <MenubarItem onClick={regenerate} disabled={loading}>
-              <ReloadIcon
-                className={cn(
-                  "nf-mr-2 nf-h-4 nf-w-4",
-                  loading && "nf-animate-spin"
-                )}
-              />
-              重新生成【Dev】
-            </MenubarItem>
+
+            <MenubarSub>
+              <MenubarSubTrigger>实验室</MenubarSubTrigger>
+              <MenubarSubContent>
+                <MenubarItem onClick={regenerate} disabled={loading}>
+                  <ReloadIcon
+                    className={cn(
+                      "nf-mr-2 nf-h-4 nf-w-4",
+                      loading && "nf-animate-spin"
+                    )}
+                  />
+                  重新生成【Dev】
+                </MenubarItem>
+              </MenubarSubContent>
+            </MenubarSub>
             <MenubarSeparator />
             {/* <MenubarCheckboxItem checked={showMd} onCheckedChange={setShowMd}>
               查看MD内容

@@ -282,7 +282,10 @@ export const isPC = () => {
 
 export const replaceStyle = (id: string, css: string) => {
   const shadowRoot = document.getElementById(SHADOW_HOST_ID)?.shadowRoot
-  if (!shadowRoot) return
+  if (!shadowRoot) {
+    console.error("shadowRoot 不存在")
+    return
+  }
   const style = shadowRoot.getElementById(id)
   try {
     style.innerHTML = css

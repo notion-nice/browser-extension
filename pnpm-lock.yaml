@@ -68,6 +68,9 @@ dependencies:
   clsx:
     specifier: ^2.1.0
     version: 2.1.0
+  fflate:
+    specifier: ^0.8.2
+    version: 0.8.2
   highlight.js:
     specifier: ^9.15.6
     version: 9.18.5
@@ -77,6 +80,9 @@ dependencies:
   juice:
     specifier: ^5.2.0
     version: 5.2.0
+  less:
+    specifier: ^4.2.0
+    version: 4.2.0
   markdown-it:
     specifier: ^8.4.2
     version: 8.4.2
@@ -124,6 +130,9 @@ devDependencies:
   '@types/chrome':
     specifier: ^0.0.251
     version: 0.0.251
+  '@types/less':
+    specifier: ^3.0.6
+    version: 3.0.6
   '@types/node':
     specifier: ^20.9.0
     version: 20.11.5
@@ -3815,6 +3824,10 @@ packages:
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
     dev: false
 
+  /@types/less@3.0.6:
+    resolution: {integrity: sha512-PecSzorDGdabF57OBeQO/xFbAkYWo88g4Xvnsx7LRwqLC17I7OoKtA3bQB9uXkY6UkMWCOsA8HSVpaoitscdXw==}
+    dev: true
+
   /@types/node@20.11.5:
     resolution: {integrity: sha512-g557vgQjUUfN76MZAN/dt1z3dzcUsimuysco0KeluHgrPdJXkP/XdAURgyO2W9fZWHRtRBiVKzKn8vyOAwlG+w==}
     dependencies:
@@ -5062,6 +5075,10 @@ packages:
 
   /fflate@0.8.1:
     resolution: {integrity: sha512-/exOvEuc+/iaUm105QIiOt4LpBdMTWsXxqR0HDF35vx3fmaKzw7354gTilCh5rkzEt8WYyG//ku3h3nRmd7CHQ==}
+    dev: false
+
+  /fflate@0.8.2:
+    resolution: {integrity: sha512-cPJU47OaAoCbg0pBvzsgpTPhmhqI5eJjh/JIu8tPj5q+T7iLvW/JAYUqmE7KOB4R1ZyEhzBaIQpQpardBF5z8A==}
     dev: false
 
   /figures@5.0.0:
