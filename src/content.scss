@@ -212,9 +212,10 @@ $caret-color-dark-theme: rgb(255, 255, 255);
               // margin-left: 0px; add heading class here
               .text {
                 display: inline-block;
-                // white-space: nowrap;
-                // overflow: hidden;
-                // text-overflow: ellipsis;
+                text-align: left;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
                 @include themify() {
                   color: themed("color");
                   fill: themed("fill");
