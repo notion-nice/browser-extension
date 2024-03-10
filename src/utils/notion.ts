@@ -1,8 +1,10 @@
 import axios, { type AxiosInstance } from "axios"
 import Cookies from "js-cookie"
 
+import sitdownConverter from "./sitdownConverter"
+
 type MapInfo = [AxiosInstance, string, string]
-type UserInfo = {}
+type UserInfo = { id: string; email: string; name: string }
 type ExportBlockRet = { exportURL: string; taskId: string; pageId: string }
 type ExportOptions = {
   exportType: "markdown" | "html"
@@ -12,6 +14,8 @@ type ExportOptions = {
 const notionClientVersion = "23.13.0.109"
 const pageMap = new Map<string, MapInfo>()
 const userMap = new Map<string, UserInfo>()
+
+const upgradeImgPath = chrome.runtime.getURL("assets/upgrade.png")
 
 export const exportBlock = (options: ExportOptions) =>
   new Promise<ExportBlockRet>(async (resolve, reason) => {
@@ -61,6 +65,157 @@ export const exportBlock = (options: ExportOptions) =>
       }
     }
   })
+
+export const HTMLToMD = async (input: string) => {
+  // 创建一个DOMParser实例
+  const parser = new DOMParser()
+
+  // 使用DOMParser解析HTML字符串
+  const doc = parser.parseFromString(input, "text/html")
+  const imgIds = []
+  const equationIds = []
+  const textEquationIds = []
+
+  doc
+    .querySelectorAll("article .page-body figure.image")
+    .forEach((imgEl: HTMLElement) => {
+      const blockId = imgEl.id
+      imgEl.innerHTML = `<img src="${upgradeImgPath}">`
+      imgIds.push(blockId)
+    })
+
+  if (imgIds.length) {
+    const map = await syncRecordValues(imgIds)
+    map.forEach(({ blockId, content, url }) => {
+      const imgEl = doc.getElementById(blockId)
+      imgEl.innerHTML = `<img src="${url}" alt="${content}">`
+    })
+  }
+
+  doc
+    .querySelectorAll("article .page-body figure.equation")
+    .forEach((el: HTMLElement) => {
+      equationIds.push(el.id)
+    })
+
+  if (equationIds.length) {
+    const map = await syncRecordValues(equationIds)
+
+    map.forEach(({ blockId, content }) => {
+      const el = doc.getElementById(blockId)
+      el.innerHTML = `<p>$$\n${content}\n$$</p>`
+    })
+  }
+
+  doc
+    .querySelectorAll("article .page-body .notion-text-equation-token")
+    .forEach((el: HTMLElement) => {
+      const id = getParentElementId(el)
+      if (id) textEquationIds.push(id)
+    })
+  if (textEquationIds.length) {
+    const map = await syncRecordValues(textEquationIds)
+    map.forEach(({ blockId, content }) => {
+      const el = doc.getElementById(blockId)
+      el.innerHTML = `<p>${content}</p>`
+    })
+  }
+
+  const article = doc.querySelector("article .page-body").innerHTML
+  return sitdownConverter.GFM(article)
+}
+
+export const getUserInfo = async () => {
+  const [axiosNotion, userId] = getAxiosNotionByUser()
+
+  if (userMap.has(userId)) {
+    return userMap.get(userId)
+  }
+
+  const user = await axiosNotion
+    .post("/getSpaces")
+    .then((r) => r.data?.[userId]?.notion_user?.[userId]?.value?.value)
+  userMap.set(userId, { ...user, id: userId })
+
+  return userMap.get(userId)
+}
+
+const getParentElementId = (el: HTMLElement) => {
+  if (!el.parentElement) return null
+  if (el.parentElement?.id) {
+    return el.parentElement.id
+  }
+  return getParentElementId(el.parentElement)
+}
+
+const flatTitle = (val: any) => {
+  if (!val) return ""
+  if (val instanceof Array) {
+    return val
+      .map((item) => {
+        if (item[0] == "⁍") {
+          if (item[1] instanceof Array) {
+            return item[1].map((i) => {
+              if (i[0] == "e") {
+                return `$${i[1]}$`
+              }
+              return flatTitle(i)
+            })
+          }
+          return flatTitle(item[1])
+        }
+        return flatTitle(item)
+      })
+      .join("")
+  }
+  return val
+}
+
+const syncRecordValues = async (blockIds: string[]) => {
+  const userId: string = Cookies.get("notion_user_id")
+  const info = await getAxiosNotion()
+  if (!info) {
+    throw Error("The pageId does not exist in the current path")
+  }
+  const [axiosNotion, spaceId, pageId] = info
+  const ret = await axiosNotion
+    .post("/syncRecordValues", {
+      requests: blockIds.map((id) => ({
+        pointer: { table: "block", id, spaceId },
+        version: -1
+      }))
+    })
+    .then((r) => r.data)
+  const block = ret.recordMap?.block || {}
+  return blockIds
+    .map((key) => {
+      if (!block[key]) return
+      const info = block[key].value?.value || {}
+      const title: string = flatTitle(info.properties?.title) || ""
+      const source: string = info.properties?.source?.[0]?.[0]
+
+      switch (info.type) {
+        case "image":
+          if (!source) return
+          // if (url.startsWith('https://prod-files-secure.s3.us-west-2.amazonaws.com')) {}
+          const url = `https://www.notion.so/image/${encodeURIComponent(source)}?table=block&id=${key}&spaceId=${spaceId}&width=480&userId=${userId}`
+          return {
+            blockId: key,
+            url,
+            content: title === "Untitled" ? "" : title
+          }
+        case "equation":
+          if (!title) return
+          return { blockId: key, content: title, url: "" }
+        case "text":
+          if (!title) return
+          return { blockId: key, content: title, url: "" }
+        default:
+          return
+      }
+    })
+    .filter(Boolean)
+}
 
 const getAxiosNotion = async () => {
   const [axiosNotion, userId] = getAxiosNotionByUser()

@@ -1,6 +1,5 @@
 import { ReloadIcon } from "@radix-ui/react-icons"
 import { useLocalStorageState, useMount, useUpdate } from "ahooks"
-import less from "less"
 import React, { useMemo, useRef, useState } from "react"
 
 import { sendToBackground } from "@plasmohq/messaging"
@@ -25,7 +24,7 @@ import {
   solveWeChatMath
 } from "~utils/converter"
 import { parserMarkdown, replaceStyle } from "~utils/helper"
-import { exportBlock } from "~utils/notion"
+import { exportBlock, HTMLToMD } from "~utils/notion"
 
 import {
   Menubar,
@@ -127,31 +126,19 @@ export const Converter = () => {
         body: { exportURL, pageId }
       })
 
-      setLoading(false)
       if (!resp.ok) {
+        setLoading(false)
         console.error("exportBlock", resp.error)
         toast({ variant: "destructive", description: resp.error })
         return
       }
 
-      // 创建一个DOMParser实例
-      const parser = new DOMParser()
+      const md = await HTMLToMD(resp.html)
 
-      // 使用DOMParser解析HTML字符串
-      const doc = parser.parseFromString(resp.html, "text/html")
-
-      // 提取style和body
-      const style = doc.querySelector("style").innerText
-      const article = doc.querySelector("article .page-body").innerHTML
-
-      const output = await less.render(`#nice { ${style} }`)
-
-      console.log("exportBlock", article, output.css)
-      setHtmlContent(article)
-      replaceStyle(BASIC_THEME_ID, output.css)
-      replaceStyle(MARKDOWN_THEME_ID, "")
-      replaceStyle(CODE_THEME_ID, "")
-      // fetchZip(exportURL, pageId)
+      setUrl(resp.url)
+      setContent(md)
+      setFootContent(parseLinkToFoot(md))
+      setLoading(false)
     } catch (error) {
       toast({ variant: "destructive", description: error.message })
     } finally {

@@ -3,6 +3,8 @@ import axios from "axios"
 import Cookies from "js-cookie"
 import React, { useContext, useState } from "react"
 
+import { getUserInfo } from "~utils/notion"
+
 import { ThemeContext } from "./ThemeContext"
 import { Button } from "./ui/button"
 import {
@@ -20,7 +22,6 @@ export const Upgrade = ({
   const theme = useContext(ThemeContext)
   const [paymentUrl, setPaymentUrl] = useState("")
   useMount(async () => {
-    const userId = Cookies.get("notion_user_id")
     const baseURL = process.env.PLASMO_PUBLIC_STRIPE_HOST
     const axiosStripe = axios.create({
       baseURL,
@@ -28,21 +29,14 @@ export const Upgrade = ({
         "Content-Type": "application/json"
       }
     })
-    const axiosNotion = axios.create({
-      baseURL: "https://www.notion.so/api/v3",
-      headers: {
-        "Notion-Audit-Log-Platform": "web",
-        "Notion-Client-Version": "23.13.0.109", // TODO 需要改成变量
-        "X-Notion-Active-User-Header": userId
-      }
-    })
-
-    const user = await axiosNotion
-      .post("/getSpaces")
-      .then((r) => r.data?.[userId]?.notion_user?.[userId]?.value?.value)
+    const user = await getUserInfo()
 
     const { customerId } = await axiosStripe
-      .post("/create-payment", { userId, email: user.email, name: user.name })
+      .post("/create-payment", {
+        userId: user.id,
+        email: user.email,
+        name: user.name
+      })
       .then((r) => r.data)
 
     setPaymentUrl(`${baseURL}/pay/${customerId}/`)

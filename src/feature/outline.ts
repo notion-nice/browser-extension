@@ -15,6 +15,12 @@ import {
   outlineFrameCls
 } from "~utils/constant"
 
+declare global {
+  interface Window {
+    nbScrollToTop(): void
+  }
+}
+
 let pageChangeObserverObj: MutationObserver | null = null
 let docEditObserverObj: MutationObserver | null = null
 
@@ -25,10 +31,11 @@ const DEBUG = false
 
 // starting point
 export function displayOutline(isShow: boolean, addBoostStyle: () => void) {
-  console.log(`feature: displayOutline: ${isShow}`)
-
   if (isShow) {
-    console.log("setting up outline feature")
+    window.nbScrollToTop = function () {
+      var doc = document.querySelector(".notion-frame > .notion-scroller")
+      doc.scroll({ top: 0, left: 0 })
+    }
 
     // triggers on page load
     // it waits for doc to be loaded
@@ -206,15 +213,6 @@ function addOutline() {
     let outlineEl = getElement(outlineFrameCls)
 
     if (!outlineEl || outlineEl.length === 0) {
-      const script = `<script>
-        function nbScrollToTop(){
-          var doc = document.querySelector('.notion-frame > .notion-scroller'); doc.scroll({top: 0,left: 0});
-        }
-        </script>`
-
-      const scriptEl = document.createRange().createContextualFragment(script)
-      document.body.append(scriptEl)
-
       // do not add any space between closing and ending of `
       outlineEl = toElement(`
         <div class="nb-outline">
