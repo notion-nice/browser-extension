@@ -108,6 +108,7 @@ export const HTMLToMD = async (input: string) => {
   }
 
   const textEquationIds = []
+  const textEquationMap: Array<{ key: string; content: string }> = []
   doc
     .querySelectorAll("article .page-body .notion-text-equation-token")
     .forEach((el: HTMLElement) => {
@@ -116,9 +117,11 @@ export const HTMLToMD = async (input: string) => {
     })
   if (textEquationIds.length) {
     const map = await syncRecordValues(textEquationIds)
-    map.forEach(({ blockId, content }) => {
+    map.forEach(({ blockId, content, maps }) => {
       const el = doc.getElementById(blockId)
       el.innerHTML = `<p>${content}</p>`
+      console.log(blockId, maps)
+      textEquationMap.push(...Object.keys(maps).map((k) => maps[k]))
     })
   }
 
@@ -126,9 +129,11 @@ export const HTMLToMD = async (input: string) => {
 
   let md = sitdownConverter.GFM(article)
 
-  console.log(article, "\n---\n", md, "\n---\n", equationMap)
+  textEquationMap.map(({ key, content }) => {
+    md = md.replace(key, `$${content}$`)
+  })
 
-  equationMap.forEach(({ key, content }) => {
+  equationMap.map(({ key, content }) => {
     md = md.replace(key, `$$\n${content}\n$$`)
   })
 
@@ -188,7 +193,7 @@ const syncRecordValues = async (blockIds: string[]) => {
                   return item[1].map((i) => {
                     if (i[0] == "e") {
                       const id = [key, uuid()].join("-")
-                      maps[id] = { key: `[#](${id})`, content: i[1] }
+                      maps[id] = { key: `[${id}](#)`, content: i[1] }
                       return `<a href="#">${id}</a>`
                     }
                     return flatTitle(i)
@@ -215,14 +220,15 @@ const syncRecordValues = async (blockIds: string[]) => {
           return {
             blockId: key,
             url,
+            maps,
             content: title === "Untitled" ? "" : title
           }
         case "equation":
           if (!title) return
-          return { blockId: key, content: title, url: "" }
+          return { blockId: key, content: title, maps, url: "" }
         case "text":
           if (!title) return
-          return { blockId: key, content: title, url: "" }
+          return { blockId: key, content: title, maps, url: "" }
         default:
           return
       }
