@@ -5,7 +5,13 @@ import { v4 as uuid } from "uuid"
 import sitdownConverter from "./sitdownConverter"
 
 type MapInfo = [AxiosInstance, string, string]
-type UserInfo = { id: string; email: string; name: string }
+type UserInfo = {
+  userId: string
+  customerId: string
+  email: string
+  name: string
+  metadata: any
+}
 type ExportBlockRet = { exportURL: string; taskId: string; pageId: string }
 type ExportOptions = {
   exportType: "markdown" | "html"
@@ -15,6 +21,12 @@ type ExportOptions = {
 const notionClientVersion = "23.13.0.109"
 const pageMap = new Map<string, MapInfo>()
 const userMap = new Map<string, UserInfo>()
+const axiosStripe = axios.create({
+  baseURL: `${process.env.PLASMO_PUBLIC_STRIPE_HOST}/api/stripe`,
+  headers: {
+    "Content-Type": "application/json"
+  }
+})
 
 const upgradeImgPath = chrome.runtime.getURL("assets/upgrade.png")
 
@@ -150,9 +162,45 @@ export const getUserInfo = async () => {
   const user = await axiosNotion
     .post("/getSpaces")
     .then((r) => r.data?.[userId]?.notion_user?.[userId]?.value?.value)
-  userMap.set(userId, { ...user, id: userId })
+
+  const ret = await axiosStripe
+    .post("/customer", {
+      userId: user.id,
+      email: user.email,
+      name: user.name
+    })
+    .then((r) => r.data)
+  if (ret.ok) {
+    userMap.set(userId, {
+      ...user,
+      ...ret.customer,
+      userId,
+      customerId: ret.customer.id
+    })
+  } else {
+    userMap.set(userId, { ...user, id: userId })
+  }
 
   return userMap.get(userId)
+}
+
+export const getComboPrice = async () => {
+  const ret = await axiosStripe.post("/prices").then((r) => r.data)
+  if (ret.ok) {
+    return ret.price.unit_amount / 100
+  }
+  return 0
+}
+
+export const generatePaymentUrl = async () => {
+  const user = await getUserInfo()
+  const ret = await axiosStripe
+    .post(`payment/${user.userId}`)
+    .then((r) => r.data)
+  if (!ret.ok) {
+    throw Error(ret.error.message)
+  }
+  return ret.url as string
 }
 
 const getParentElementId = (el: HTMLElement) => {
@@ -215,7 +263,6 @@ const syncRecordValues = async (blockIds: string[]) => {
       switch (info.type) {
         case "image":
           if (!source) return
-          // if (url.startsWith('https://prod-files-secure.s3.us-west-2.amazonaws.com')) {}
           const url = `https://www.notion.so/image/${encodeURIComponent(source)}?table=block&id=${key}&spaceId=${spaceId}&width=480&userId=${userId}`
           return {
             blockId: key,

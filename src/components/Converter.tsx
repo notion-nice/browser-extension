@@ -53,7 +53,6 @@ export const Converter = () => {
   const [loading, setLoading] = useState(false)
   const [copying, setCopying] = useState(false)
   const [linkToFoot, setLinkToFoot] = useState(true)
-  const [htmlContent, setHtmlContent] = useState("")
   const [mdContent, setContent] = useState("")
   const [mdFootContent, setFootContent] = useState("")
   const [mdUrl, setUrl] = useState("")
@@ -67,14 +66,13 @@ export const Converter = () => {
   )
 
   const parseHtml = useMemo(() => {
-    if (htmlContent) return htmlContent
     if (linkToFoot) {
       if (!mdFootContent) return ""
       return parserMarkdown(mdFootContent, mdUrl)
     }
     if (!mdContent) return ""
     return parserMarkdown(mdContent, mdUrl)
-  }, [mdContent, mdFootContent, linkToFoot, htmlContent])
+  }, [mdContent, mdFootContent, linkToFoot])
 
   useMount(() => {
     let timer = window.setInterval(() => {
