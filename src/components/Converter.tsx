@@ -90,29 +90,6 @@ export const Converter = () => {
     window.localStorage.setItem(STYLE, style)
     replaceStyle(MARKDOWN_THEME_ID, style)
   }
-  const fetchZip = async (exportURL: string, pageId: string) => {
-    try {
-      const resp = await sendToBackground({
-        name: "converter",
-        body: { exportURL, pageId }
-      })
-      setLoading(false)
-      if (!resp.ok) {
-        console.error("exportBlock", resp.error)
-        toast({ variant: "destructive", description: resp.error })
-        return
-      }
-      const md = resp.md.replace(/\!\[Untitled\]\(/g, "![](")
-
-      setUrl(resp.url)
-      setContent(md)
-      setFootContent(parseLinkToFoot(md))
-    } catch (error) {
-      setLoading(false)
-      console.error("exportBlock", error)
-      toast({ variant: "destructive", description: "Error uploading file" })
-    }
-  }
   const regenerate = async () => {
     setLoading(true)
 
@@ -145,18 +122,33 @@ export const Converter = () => {
       setLoading(false)
     }
   }
-  const onClick = async () => {
-    setLoading(true)
-    try {
-      const { exportURL, pageId } = await exportBlock({
-        exportType: "markdown"
-      })
-      fetchZip(exportURL, pageId)
-    } catch (error) {
-      setLoading(false)
-      toast({ variant: "destructive", description: error.message })
-    }
-  }
+  // 旧版本的生成功能
+  // const onClick = async () => {
+  //   setLoading(true)
+  //   try {
+  //     const { exportURL, pageId } = await exportBlock({
+  //       exportType: "markdown"
+  //     })
+  //     const resp = await sendToBackground({
+  //       name: "converter",
+  //       body: { exportURL, pageId }
+  //     })
+  //     setLoading(false)
+  //     if (!resp.ok) {
+  //       console.error("exportBlock", resp.error)
+  //       toast({ variant: "destructive", description: resp.error })
+  //       return
+  //     }
+  //     const md = resp.md.replace(/\!\[Untitled\]\(/g, "![](")
+
+  //     setUrl(resp.url)
+  //     setContent(md)
+  //     setFootContent(parseLinkToFoot(md))
+  //   } catch (error) {
+  //     setLoading(false)
+  //     toast({ variant: "destructive", description: error.message })
+  //   }
+  // }
 
   const copyWechat = async () => {
     setCopying(true)
@@ -218,7 +210,7 @@ export const Converter = () => {
         <MenubarMenu>
           <MenubarTrigger>文件</MenubarTrigger>
           <MenubarContent portalProps={{ container: containerRef.current }}>
-            <MenubarItem onClick={onClick} disabled={loading}>
+            <MenubarItem onClick={regenerate} disabled={loading}>
               <ReloadIcon
                 className={cn(
                   "nf-mr-2 nf-h-4 nf-w-4",
@@ -228,20 +220,6 @@ export const Converter = () => {
               重新生成
             </MenubarItem>
 
-            <MenubarSub>
-              <MenubarSubTrigger>实验室</MenubarSubTrigger>
-              <MenubarSubContent>
-                <MenubarItem onClick={regenerate} disabled={loading}>
-                  <ReloadIcon
-                    className={cn(
-                      "nf-mr-2 nf-h-4 nf-w-4",
-                      loading && "nf-animate-spin"
-                    )}
-                  />
-                  重新生成【Dev】
-                </MenubarItem>
-              </MenubarSubContent>
-            </MenubarSub>
             <MenubarSeparator />
             {/* <MenubarCheckboxItem checked={showMd} onCheckedChange={setShowMd}>
               查看MD内容

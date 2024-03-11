@@ -1,5 +1,6 @@
 import axios, { type AxiosInstance } from "axios"
 import Cookies from "js-cookie"
+import { v4 as uuid } from "uuid"
 
 import sitdownConverter from "./sitdownConverter"
 
@@ -73,8 +74,6 @@ export const HTMLToMD = async (input: string) => {
   // 使用DOMParser解析HTML字符串
   const doc = parser.parseFromString(input, "text/html")
   const imgIds = []
-  const equationIds = []
-  const textEquationIds = []
 
   doc
     .querySelectorAll("article .page-body figure.image")
@@ -92,21 +91,23 @@ export const HTMLToMD = async (input: string) => {
     })
   }
 
+  const equationIds = []
+  const equationMap: Array<{ key: string; content: string }> = []
   doc
     .querySelectorAll("article .page-body figure.equation")
     .forEach((el: HTMLElement) => {
       equationIds.push(el.id)
+      el.innerHTML = `<a href="#">${el.id}</a>`
     })
 
   if (equationIds.length) {
     const map = await syncRecordValues(equationIds)
-
     map.forEach(({ blockId, content }) => {
-      const el = doc.getElementById(blockId)
-      el.innerHTML = `<p>$$\n${content}\n$$</p>`
+      equationMap.push({ key: `[${blockId}](#)`, content })
     })
   }
 
+  const textEquationIds = []
   doc
     .querySelectorAll("article .page-body .notion-text-equation-token")
     .forEach((el: HTMLElement) => {
@@ -122,7 +123,16 @@ export const HTMLToMD = async (input: string) => {
   }
 
   const article = doc.querySelector("article .page-body").innerHTML
-  return sitdownConverter.GFM(article)
+
+  let md = sitdownConverter.GFM(article)
+
+  console.log(article, "\n---\n", md, "\n---\n", equationMap)
+
+  equationMap.forEach(({ key, content }) => {
+    md = md.replace(key, `$$\n${content}\n$$`)
+  })
+
+  return md
 }
 
 export const getUserInfo = async () => {
@@ -148,29 +158,6 @@ const getParentElementId = (el: HTMLElement) => {
   return getParentElementId(el.parentElement)
 }
 
-const flatTitle = (val: any) => {
-  if (!val) return ""
-  if (val instanceof Array) {
-    return val
-      .map((item) => {
-        if (item[0] == "⁍") {
-          if (item[1] instanceof Array) {
-            return item[1].map((i) => {
-              if (i[0] == "e") {
-                return `$${i[1]}$`
-              }
-              return flatTitle(i)
-            })
-          }
-          return flatTitle(item[1])
-        }
-        return flatTitle(item)
-      })
-      .join("")
-  }
-  return val
-}
-
 const syncRecordValues = async (blockIds: string[]) => {
   const userId: string = Cookies.get("notion_user_id")
   const info = await getAxiosNotion()
@@ -190,8 +177,34 @@ const syncRecordValues = async (blockIds: string[]) => {
   return blockIds
     .map((key) => {
       if (!block[key]) return
+      const maps: any = {}
+      const flatTitle = (val: any) => {
+        if (!val) return ""
+        if (val instanceof Array) {
+          return val
+            .map((item) => {
+              if (item[0] == "⁍") {
+                if (item[1] instanceof Array) {
+                  return item[1].map((i) => {
+                    if (i[0] == "e") {
+                      const id = [key, uuid()].join("-")
+                      maps[id] = { key: `[#](${id})`, content: i[1] }
+                      return `<a href="#">${id}</a>`
+                    }
+                    return flatTitle(i)
+                  })
+                }
+                return flatTitle(item[1])
+              }
+              return flatTitle(item)
+            })
+            .join("")
+        }
+        return val
+      }
+
       const info = block[key].value?.value || {}
-      const title: string = flatTitle(info.properties?.title) || ""
+      const title = flatTitle(info.properties?.title) || ""
       const source: string = info.properties?.source?.[0]?.[0]
 
       switch (info.type) {
