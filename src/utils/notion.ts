@@ -2,6 +2,8 @@ import axios, { type AxiosInstance } from "axios"
 import Cookies from "js-cookie"
 import { v4 as uuid } from "uuid"
 
+import { sendToBackground } from "@plasmohq/messaging"
+
 import sitdownConverter from "./sitdownConverter"
 
 type MapInfo = [AxiosInstance, string, string]
@@ -21,12 +23,6 @@ type ExportOptions = {
 const notionClientVersion = "23.13.0.109"
 const pageMap = new Map<string, MapInfo>()
 const userMap = new Map<string, UserInfo>()
-const axiosStripe = axios.create({
-  baseURL: `${process.env.PLASMO_PUBLIC_STRIPE_HOST}/api/stripe`,
-  headers: {
-    "Content-Type": "application/json"
-  }
-})
 
 const upgradeImgPath = chrome.runtime.getURL("assets/upgrade.png")
 
@@ -80,6 +76,8 @@ export const exportBlock = (options: ExportOptions) =>
   })
 
 export const HTMLToMD = async (input: string) => {
+  const user = await getUserInfo()
+  const isPlus = user.metadata?.plan_type === "plus"
   // 创建一个DOMParser实例
   const parser = new DOMParser()
 
@@ -95,7 +93,7 @@ export const HTMLToMD = async (input: string) => {
       imgIds.push(blockId)
     })
 
-  if (imgIds.length) {
+  if (imgIds.length && isPlus) {
     const map = await syncRecordValues(imgIds)
     map.forEach(({ blockId, content, url }) => {
       const imgEl = doc.getElementById(blockId)
@@ -132,7 +130,6 @@ export const HTMLToMD = async (input: string) => {
     map.forEach(({ blockId, content, maps }) => {
       const el = doc.getElementById(blockId)
       el.innerHTML = `<p>${content}</p>`
-      console.log(blockId, maps)
       textEquationMap.push(...Object.keys(maps).map((k) => maps[k]))
     })
   }
@@ -163,13 +160,15 @@ export const getUserInfo = async () => {
     .post("/getSpaces")
     .then((r) => r.data?.[userId]?.notion_user?.[userId]?.value?.value)
 
-  const ret = await axiosStripe
-    .post("/customer", {
+  const ret = await sendToBackground({
+    name: "customer",
+    body: {
       userId: user.id,
       email: user.email,
       name: user.name
-    })
-    .then((r) => r.data)
+    }
+  })
+
   if (ret.ok) {
     userMap.set(userId, {
       ...user,
@@ -185,7 +184,7 @@ export const getUserInfo = async () => {
 }
 
 export const getComboPrice = async () => {
-  const ret = await axiosStripe.post("/prices").then((r) => r.data)
+  const ret = await sendToBackground({ name: "prices" })
   if (ret.ok) {
     return ret.price.unit_amount / 100
   }
@@ -194,9 +193,11 @@ export const getComboPrice = async () => {
 
 export const generatePaymentUrl = async () => {
   const user = await getUserInfo()
-  const ret = await axiosStripe
-    .post(`payment/${user.userId}`)
-    .then((r) => r.data)
+
+  const ret = await sendToBackground({
+    name: "payment",
+    body: { userId: user.userId }
+  })
   if (!ret.ok) {
     throw Error(ret.error.message)
   }

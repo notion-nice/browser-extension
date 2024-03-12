@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.0] - 2024-03-12
+
+### Added
+
+- 完善基本订阅逻辑，内测上线
+
+## [0.0.7] - 2024-03-11
+
+### Added
+
+- 全新排版引擎上线
+
 ## [0.0.6] - 2024-03-05
 
 ### Added

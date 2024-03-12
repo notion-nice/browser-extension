@@ -1,22 +1,13 @@
 import { useMount } from "ahooks"
-import axios from "axios"
-import Cookies from "js-cookie"
 import React, { useState } from "react"
 
 import { generatePaymentUrl, getComboPrice, getUserInfo } from "~utils/notion"
 
 import { Button, type ButtonProps } from "./ui/button"
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  type DialogContentProps
-} from "./ui/dialog"
+import { Dialog, DialogContent, type DialogContentProps } from "./ui/dialog"
 import { useToast } from "./ui/use-toast"
 
-const PlusSvg = (
+export const PlusSvg: JSX.Element = (
   <svg
     width="24"
     height="24"
@@ -29,6 +20,20 @@ const PlusSvg = (
       fill="currentColor"></path>
     <path
       d="M17.1913 3.69537L17.6794 2.23105C17.7821 1.92298 18.2179 1.92298 18.3206 2.23105L18.8087 3.69537C19.0441 4.40167 19.5983 4.9559 20.3046 5.19133L21.769 5.67944C22.077 5.78213 22.077 6.21787 21.769 6.32056L20.3046 6.80867C19.5983 7.0441 19.0441 7.59833 18.8087 8.30463L18.3206 9.76895C18.2179 10.077 17.7821 10.077 17.6794 9.76895L17.1913 8.30463C16.9559 7.59833 16.4017 7.0441 15.6954 6.80867L14.231 6.32056C13.923 6.21787 13.923 5.78213 14.231 5.67944L15.6954 5.19133C16.4017 4.9559 16.9559 4.40167 17.1913 3.69537Z"
+      fill="currentColor"></path>
+  </svg>
+)
+
+const AISvg = (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 16 16"
+    fill="none"
+    className="icon-md nf-text-blue-600"
+    width="16"
+    height="16">
+    <path
+      d="M12.784 1.442a.8.8 0 0 0-1.569 0l-.191.953a.8.8 0 0 1-.628.628l-.953.19a.8.8 0 0 0 0 1.57l.953.19a.8.8 0 0 1 .628.629l.19.953a.8.8 0 0 0 1.57 0l.19-.953a.8.8 0 0 1 .629-.628l.953-.19a.8.8 0 0 0 0-1.57l-.953-.19a.8.8 0 0 1-.628-.629l-.19-.953h-.002ZM5.559 4.546a.8.8 0 0 0-1.519 0l-.546 1.64a.8.8 0 0 1-.507.507l-1.64.546a.8.8 0 0 0 0 1.519l1.64.547a.8.8 0 0 1 .507.505l.546 1.641a.8.8 0 0 0 1.519 0l.546-1.64a.8.8 0 0 1 .506-.507l1.641-.546a.8.8 0 0 0 0-1.519l-1.64-.546a.8.8 0 0 1-.507-.506L5.56 4.546Zm5.6 6.4a.8.8 0 0 0-1.519 0l-.147.44a.8.8 0 0 1-.505.507l-.441.146a.8.8 0 0 0 0 1.519l.44.146a.8.8 0 0 1 .507.506l.146.441a.8.8 0 0 0 1.519 0l.147-.44a.8.8 0 0 1 .506-.507l.44-.146a.8.8 0 0 0 0-1.519l-.44-.147a.8.8 0 0 1-.507-.505l-.146-.441Z"
       fill="currentColor"></path>
   </svg>
 )
@@ -64,10 +69,21 @@ const defaultPlusInfo: ComboInfo = {
   description: " 免费版的所有内容，再加上：",
   featureList: ["无图片限制的文章排版生成", "访问额外的实验性功能"]
 }
+const defaultAIInfo: ComboInfo = {
+  icon: AISvg,
+  label: "NotionNice AI",
+  price: 0,
+  btnText: "功能开发中",
+  btnProps: { variant: "default", disabled: true },
+  description: " 包含 Plus 中的所有内容，以及：",
+  featureList: ["使用 Harvest 快速收藏并分析文章", "访问额外的AI实验性功能"]
+}
+type UpgradeProps = Pick<DialogContentProps, "portalProps"> & {
+  open: boolean
+  onOpenChange: (open: boolean) => void
+}
 
-export const Upgrade = ({
-  portalProps
-}: Pick<DialogContentProps, "portalProps">) => {
+export const Upgrade = ({ open, portalProps, onOpenChange }: UpgradeProps) => {
   const { toast } = useToast()
   const [loading, setLoading] = useState(false)
   const [comboList, setComboList] = useState<ComboInfo[]>([
@@ -75,7 +91,9 @@ export const Upgrade = ({
     defaultPlusInfo
   ])
   useMount(async () => {
+    const user = await getUserInfo()
     const plusInfo: ComboInfo = { ...defaultPlusInfo }
+    const isPlus = user.metadata?.plan_type === "plus"
     plusInfo.price = await getComboPrice()
     plusInfo.btnProps.onClick = () => {
       setLoading(true)
@@ -90,32 +108,26 @@ export const Upgrade = ({
           setLoading(false)
         })
     }
+
+    if (isPlus) {
+      plusInfo.btnText = "你当前的套餐"
+      plusInfo.btnProps = {
+        variant: "default",
+        disabled: true
+      }
+
+      setComboList([plusInfo, defaultAIInfo])
+      return
+    }
     setComboList([freeInfo, plusInfo])
   })
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button variant="link">升级到Plus</Button>
-      </DialogTrigger>
-      <DialogContent className="!nf-w-[640px] !nf-p-0 !nf-gap-0" portalProps={portalProps}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent
+        className="!nf-w-[640px] !nf-p-0 !nf-gap-0"
+        portalProps={portalProps}>
         <div className="nf-flex nf-w-full nf-flex-row nf-items-center nf-justify-between nf-border-b nf-px-8 nf-py-6 ">
           <span className="nf-text-xl nf-font-medium">您的套餐</span>
-          {/* <button className="text-token-text-primary opacity-50 transition hover:opacity-75">
-            <svg
-              stroke="currentColor"
-              fill="none"
-              stroke-width="2"
-              viewBox="0 0 24 24"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              className="h-5 w-5"
-              height="1em"
-              width="1em"
-              xmlns="http://www.w3.org/2000/svg">
-              <line x1="18" y1="6" x2="6" y2="18"></line>
-              <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
-          </button> */}
         </div>
         <div className="nf-flex nf-flex-col md:nf-flex-row">
           {comboList.map((combo, inx) => (

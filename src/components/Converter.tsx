@@ -7,9 +7,7 @@ import { sendToBackground } from "@plasmohq/messaging"
 import { cn } from "~lib/utils"
 import TEMPLATE from "~template"
 import {
-  BASIC_THEME_ID,
   BOX_ID,
-  CODE_THEME_ID,
   LAYOUT_ID,
   MARKDOWN_THEME_ID,
   SHADOW_HOST_ID,
@@ -24,8 +22,9 @@ import {
   solveWeChatMath
 } from "~utils/converter"
 import { parserMarkdown, replaceStyle } from "~utils/helper"
-import { exportBlock, HTMLToMD } from "~utils/notion"
+import { exportBlock, getUserInfo, HTMLToMD } from "~utils/notion"
 
+import { Button } from "./ui/button"
 import {
   Menubar,
   MenubarCheckboxItem,
@@ -35,13 +34,10 @@ import {
   MenubarRadioGroup,
   MenubarRadioItem,
   MenubarSeparator,
-  MenubarSub,
-  MenubarSubContent,
-  MenubarSubTrigger,
   MenubarTrigger
 } from "./ui/menubar"
 import { useToast } from "./ui/use-toast"
-import { Upgrade } from "./Upgrade"
+import { PlusSvg, Upgrade } from "./Upgrade"
 
 export const Converter = () => {
   const { toast } = useToast()
@@ -49,6 +45,8 @@ export const Converter = () => {
   const containerRef = useRef<HTMLDivElement>(null)
   const previewContainerRef = useRef<HTMLDivElement>(null)
   const previewWrapRef = useRef<HTMLDivElement>(null)
+  const [isPlus, setIsPlus] = useState<boolean>(null)
+  const [open, setOpen] = useState(false)
   const [lookCss, setLookCss] = useState(false)
   const [loading, setLoading] = useState(false)
   const [copying, setCopying] = useState(false)
@@ -82,6 +80,10 @@ export const Converter = () => {
         timer = null
       }
     }, 300)
+  })
+  useMount(async () => {
+    const user = await getUserInfo()
+    setIsPlus(user.metadata?.plan_type === "plus")
   })
 
   const setStyle = (style: string) => {
@@ -194,6 +196,18 @@ export const Converter = () => {
       setStyle(TEMPLATE.style[option.id])
     }
   }
+  const createBilling = async () => {
+    const user = await getUserInfo()
+
+    const ret = await sendToBackground({
+      name: "billing",
+      body: { userId: user.userId }
+    })
+    if (!ret.ok) {
+      throw Error(ret.error.message)
+    }
+    window.location.href = ret.url
+  }
 
   return (
     <div
@@ -257,8 +271,20 @@ export const Converter = () => {
             </MenubarItem>
           </MenubarContent>
         </MenubarMenu>
+        <MenubarMenu>
+          <MenubarTrigger>账户</MenubarTrigger>
+          <MenubarContent portalProps={{ container: containerRef.current }}>
+            <MenubarItem onClick={() => setOpen(true)}>查看套餐</MenubarItem>
+            <MenubarItem onClick={createBilling}>管理我的订阅</MenubarItem>
+          </MenubarContent>
+        </MenubarMenu>
         <div className="nf-flex-1"></div>
-        <Upgrade portalProps={{ container: containerRef.current }} />
+        {isPlus !== null && !isPlus && (
+          <Button variant="link" onClick={() => setOpen(true)}>
+            {PlusSvg}
+            <span className="nf-ml-1">升级到Plus</span>
+          </Button>
+        )}
       </Menubar>
 
       {parseHtml && (
@@ -276,6 +302,12 @@ export const Converter = () => {
           />
         </div>
       )}
+
+      <Upgrade
+        open={open}
+        onOpenChange={setOpen}
+        portalProps={{ container: containerRef.current }}
+      />
     </div>
   )
 }
