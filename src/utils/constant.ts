@@ -7,7 +7,7 @@ export const outlineFrameCls = ".nb-outline"
 export const notionScrollerCls = ".notion-frame .notion-scroller.vertical"
 export const notionPageContentCls = ".notion-page-content"
 
-export const SHADOW_STYLE_ID ="notion-nice-style"
+export const SHADOW_STYLE_ID = "notion-nice-style"
 export const SHADOW_HOST_ID = "notion-nice-content-root"
 export const CONTENT = "nice-content"
 export const STYLE = "nice-style"
@@ -44,9 +44,30 @@ export const TEMPLATE_OPTIONS = [
     id: "huanxiRed",
     name: "欢喜红"
   },
+  // {
+  //   id: "fullStackBlue",
+  //   name: "全栈蓝"
+  // },
+  {
+    id: "nightPurple",
+    name: "凝夜紫"
+  },
   {
     id: "orangeHeart",
     name: "橙心"
+  },
+  {
+    id: "green",
+    name: "绿意",
+    author: "夜尽天明"
+  },
+  {
+    id: "blueCyan",
+    name: "兰青"
+  },
+  {
+    id: "blue",
+    name: "蓝莹"
   },
   {
     id: "custom",
