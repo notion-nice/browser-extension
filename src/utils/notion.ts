@@ -196,7 +196,7 @@ export const generatePaymentUrl = async () => {
 
   const ret = await sendToBackground({
     name: "payment",
-    body: { userId: user.userId }
+    body: { userId: user.customerId }
   })
   if (!ret.ok) {
     if (ret.customer) {
