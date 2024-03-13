@@ -19,7 +19,8 @@ const buttonVariants = cva(
         secondary:
           "nf-bg-secondary nf-text-secondary-foreground nf-shadow-sm hover:nf-bg-secondary/80",
         ghost: "hover:nf-bg-accent hover:nf-text-accent-foreground",
-        link: "nf-text-primary nf-underline-offset-4 hover:nf-underline"
+        link: "nf-text-primary nf-underline-offset-4 hover:nf-underline",
+        marked: "nf-text-red nf-underline-offset-4 hover:nf-underline"
       },
       size: {
         default: "nf-h-9 nf-px-4 nf-py-2",

@@ -280,7 +280,7 @@ export const Converter = () => {
         </MenubarMenu>
         <div className="nf-flex-1"></div>
         {isPlus !== null && !isPlus && (
-          <Button variant="link" onClick={() => setOpen(true)}>
+          <Button variant="marked" onClick={() => setOpen(true)}>
             {PlusSvg}
             <span className="nf-ml-1">升级到Plus</span>
           </Button>
