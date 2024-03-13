@@ -26,6 +26,7 @@
     --radius: 0.5rem;
 
     --tertiary: 0, 0%, 93%;
+    --tertiary-foreground: 0 0% 60.78%;
     --red: 346.8 77.2% 49.8%;
   }
 
@@ -51,6 +52,7 @@
     --ring: 224.3 76.3% 48%;
     
     --tertiary: 0 0% 40.39%;
+    --tertiary-foreground: 0 0% 61%;
     --red: 346.8 77.2% 49.8%;
   }
 }

@@ -199,6 +199,15 @@ export const generatePaymentUrl = async () => {
     body: { userId: user.userId }
   })
   if (!ret.ok) {
+    if (ret.customer) {
+      userMap.set(user.userId, {
+        ...user,
+        ...ret.customer,
+        userId: user.userId,
+        customerId: ret.customer.id
+      })
+      throw Error("你当前已经开通了会员，无需再次购买")
+    }
     throw Error(ret.error.message)
   }
   return ret.url as string

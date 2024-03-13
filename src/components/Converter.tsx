@@ -1,6 +1,6 @@
 import { ReloadIcon } from "@radix-ui/react-icons"
 import { useLocalStorageState, useMount, useUpdate } from "ahooks"
-import React, { useMemo, useRef, useState } from "react"
+import React, { useEffect, useMemo, useRef, useState } from "react"
 
 import { sendToBackground } from "@plasmohq/messaging"
 
@@ -81,10 +81,12 @@ export const Converter = () => {
       }
     }, 300)
   })
-  useMount(async () => {
-    const user = await getUserInfo()
-    setIsPlus(user.metadata?.plan_type === "plus")
-  })
+
+  useEffect(() => {
+    getUserInfo().then((user) => {
+      setIsPlus(user.metadata?.plan_type === "plus")
+    })
+  }, [open])
 
   const setStyle = (style: string) => {
     window.localStorage.setItem(STYLE, style)

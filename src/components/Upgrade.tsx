@@ -66,7 +66,7 @@ const defaultPlusInfo: ComboInfo = {
   price: 0,
   btnText: "升级至Plus",
   btnProps: { variant: "default", disabled: false },
-  description: " 免费版的所有内容，再加上：",
+  description: "免费版的所有内容，再加上：",
   featureList: ["无图片限制的文章排版生成", "访问额外的实验性功能"]
 }
 const defaultAIInfo: ComboInfo = {
@@ -75,7 +75,7 @@ const defaultAIInfo: ComboInfo = {
   price: 0,
   btnText: "功能开发中",
   btnProps: { variant: "default", disabled: true },
-  description: " 包含 Plus 中的所有内容，以及：",
+  description: "包含 Plus 中的所有内容，以及：",
   featureList: ["使用 Harvest 快速收藏并分析文章", "访问额外的AI实验性功能"]
 }
 type UpgradeProps = Pick<DialogContentProps, "portalProps"> & {
@@ -90,7 +90,8 @@ export const Upgrade = ({ open, portalProps, onOpenChange }: UpgradeProps) => {
     freeInfo,
     defaultPlusInfo
   ])
-  useMount(async () => {
+
+  const generateComboList = async () => {
     const user = await getUserInfo()
     const plusInfo: ComboInfo = { ...defaultPlusInfo }
     const isPlus = user.metadata?.plan_type === "plus"
@@ -102,6 +103,7 @@ export const Upgrade = ({ open, portalProps, onOpenChange }: UpgradeProps) => {
           window.location.href = paymentUrl
         })
         .catch((error) => {
+          generateComboList()
           toast({ variant: "destructive", description: error.message })
         })
         .finally(() => {
@@ -120,7 +122,9 @@ export const Upgrade = ({ open, portalProps, onOpenChange }: UpgradeProps) => {
       return
     }
     setComboList([freeInfo, plusInfo])
-  })
+  }
+
+  useMount(generateComboList)
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent

@@ -6,7 +6,7 @@ import * as React from "react"
 import { cn } from "~lib/utils"
 
 const buttonVariants = cva(
-  "nf-inline-flex nf-items-center nf-justify-center nf-whitespace-nowrap nf-rounded-md nf-text-sm nf-font-medium nf-transition-colors focus-visible:nf-outline-none focus-visible:nf-ring-1 focus-visible:nf-ring-ring disabled:nf-pointer-events-none disabled:nf-cursor-not-allowed disabled:nf-bg-tertiary disabled:nf-opacity-50",
+  "nf-inline-flex nf-items-center nf-justify-center nf-whitespace-nowrap nf-rounded-md nf-text-sm nf-font-medium nf-transition-colors focus-visible:nf-outline-none focus-visible:nf-ring-1 focus-visible:nf-ring-ring disabled:nf-pointer-events-none disabled:nf-cursor-not-allowed disabled:nf-bg-tertiary disabled:nf-text-tertiary-foreground disabled:nf-opacity-50",
   {
     variants: {
       variant: {

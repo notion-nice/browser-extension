@@ -7,6 +7,7 @@ import { ThemeContext, type ThemeType } from "~components/ThemeContext"
 import { Toaster } from "~components/ui/toaster"
 import { getElement, onElementLoaded } from "~utility"
 import { SHADOW_HOST_ID } from "~utils/constant"
+import { getUserInfo } from "~utils/notion"
 
 export const config: PlasmoCSConfig = {
   matches: ["https://www.notion.so/*"]
@@ -22,6 +23,13 @@ export const getStyle = () => {
 const notionAppCls = ".notion-app-inner"
 const PlasmoOverlay = ({}: PlasmoCSUIProps) => {
   const [themeType, setThemeType] = useState<ThemeType>()
+  const [isUserInitialized, setIsUserInitialized] = useState(false)
+
+  useEffect(() => {
+    getUserInfo().then(() => {
+      setIsUserInitialized(true)
+    })
+  }, [])
 
   useEffect(() => {
     let observer: MutationObserver | null = null
@@ -73,6 +81,7 @@ const PlasmoOverlay = ({}: PlasmoCSUIProps) => {
   }, [])
 
   if (!themeType) return null
+  if (!isUserInitialized) return null
 
   return (
     <ThemeContext.Provider value={themeType}>

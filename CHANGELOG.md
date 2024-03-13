@@ -2,11 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.1.1] - 2024-03-13
+## [0.1.2] - 2024-03-13
 
 ### Changed
 
 - 恢复部分已下架主题
+
+### Fixed
+
+- 修复了一些问题。
 
 ## [0.1.0] - 2024-03-12
 
