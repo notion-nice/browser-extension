@@ -83,7 +83,7 @@
       }
     ],
     "host_permissions": [
-      "*://*/*",
+      "*://*.notion-nice.com/*",
       "*://*.notion.site/*",
       "*://*.notion.so/*"
     ],
