@@ -75,7 +75,7 @@ export const exportBlock = (options: ExportOptions) =>
     }
   })
 
-export const HTMLToMD = async (input: string) => {
+export const HTMLToMD = async (pageId: string, input: string) => {
   const user = await getUserInfo()
   const isPlus = user.metadata?.plan_type === "plus"
   // 创建一个DOMParser实例
@@ -94,11 +94,17 @@ export const HTMLToMD = async (input: string) => {
     })
 
   if (imgIds.length && isPlus) {
-    const map = await syncRecordValues(imgIds)
-    map.forEach(({ blockId, content, url }) => {
-      const imgEl = doc.getElementById(blockId)
-      imgEl.innerHTML = `<img src="${url}" alt="${content}">`
+    const files = await syncRecordValues(imgIds)
+    const ret = await sendToBackground({
+      name: "cos",
+      body: { pageId, files }
     })
+    if (ret.ok) {
+      ret.files.forEach(({ blockId, content, url }) => {
+        const imgEl = doc.getElementById(blockId)
+        imgEl.innerHTML = `<img src="${url}" alt="${content}">`
+      })
+    }
   }
 
   const equationIds = []

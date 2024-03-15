@@ -112,7 +112,7 @@ export const Converter = () => {
         return
       }
 
-      const md = await HTMLToMD(resp.html)
+      const md = await HTMLToMD(pageId, resp.html)
 
       setUrl(resp.url)
       setContent(md)
@@ -167,7 +167,6 @@ export const Converter = () => {
     const html = layout.innerHTML
     solveWeChatMath()
     const cpoyHtml = solveHtml()
-    console.log("cpoyHtml", cpoyHtml)
     try {
       await copyTextToClipboard(cpoyHtml)
       toast({ description: "已复制，请到微信公众平台粘贴" })

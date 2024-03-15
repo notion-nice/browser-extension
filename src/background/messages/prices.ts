@@ -5,8 +5,6 @@ import { stripeFetch } from "~utils/stripe"
 const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
   try {
     const ret = await stripeFetch.post("/prices")
-
-    console.log("prices", ret)
     res.send(ret)
   } catch (error) {
     res.send({ ok: false, error: error.message })

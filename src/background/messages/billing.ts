@@ -5,7 +5,6 @@ import { stripeFetch } from "~utils/stripe"
 const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
   try {
     const ret = await stripeFetch.post(`/billing/${req.body.userId}`)
-    console.log("billing", ret)
 
     res.send(ret)
   } catch (error) {
