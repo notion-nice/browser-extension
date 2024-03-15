@@ -4,6 +4,7 @@ import { v4 as uuid } from "uuid"
 
 import { sendToBackground } from "@plasmohq/messaging"
 
+import { uploadFiles } from "./cos"
 import sitdownConverter from "./sitdownConverter"
 
 type MapInfo = [AxiosInstance, string, string]
@@ -95,10 +96,7 @@ export const HTMLToMD = async (pageId: string, input: string) => {
 
   if (imgIds.length && isPlus) {
     const files = await syncRecordValues(imgIds)
-    const ret = await sendToBackground({
-      name: "cos",
-      body: { pageId, files }
-    })
+    const ret = await uploadFiles(pageId, files)
     if (ret.ok) {
       ret.files.forEach(({ blockId, content, url }) => {
         const imgEl = doc.getElementById(blockId)
