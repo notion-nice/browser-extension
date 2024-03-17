@@ -37,7 +37,10 @@ export const uploadFile = async (taskId: string, oFile: FileInfo) => {
       Key,
       Body: file
     })
-    return { blockId, url: `${COS_URL}/${Key}` } as FileInfo
+    const newUrl = `${COS_URL}/${Key}`
+    // 新上传得图片，请求一下防止复制到公众号得时候失败
+    fetch(newUrl)
+    return { blockId, url: newUrl } as FileInfo
   } catch (error) {
     console.error(error)
     return oFile
