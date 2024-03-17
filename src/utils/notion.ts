@@ -246,6 +246,25 @@ const getParentElementId = (el: HTMLElement) => {
   return getParentElementId(el.parentElement)
 }
 
+export const syncRecordValuesByPage = async () => {
+  const info = await getAxiosNotion()
+  if (!info) {
+    throw Error("The pageId does not exist in the current path")
+  }
+  const [axiosNotion, spaceId, pageId] = info
+  const ret = await axiosNotion
+    .post("/syncRecordValues", {
+      requests: [
+        {
+          pointer: { table: "block", id: pageId, spaceId },
+          version: -1
+        }
+      ]
+    })
+    .then((r) => r.data)
+  console.log("syncRecordValuesByPage", ret)
+}
+
 const syncRecordValues = async (taskId: string, blockIds: string[]) => {
   const userId: string = Cookies.get("notion_user_id")
   const info = await getAxiosNotion()

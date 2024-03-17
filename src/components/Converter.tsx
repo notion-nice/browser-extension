@@ -16,14 +16,15 @@ import {
   TEMPLATE_NUM,
   TEMPLATE_OPTIONS
 } from "~utils/constant"
-import {
-  copyTextToClipboard,
-  parseLinkToFoot,
-  solveHtml,
-  solveWeChatMath
-} from "~utils/converter"
+import { parseLinkToFoot } from "~utils/converter"
 import { parserMarkdown, replaceStyle } from "~utils/helper"
-import { copyToWechat, exportBlock, getUserInfo, HTMLToMD } from "~utils/notion"
+import {
+  copyToWechat,
+  exportBlock,
+  getUserInfo,
+  HTMLToMD,
+  syncRecordValuesByPage
+} from "~utils/notion"
 
 import { Button } from "./ui/button"
 import {
@@ -35,6 +36,9 @@ import {
   MenubarRadioGroup,
   MenubarRadioItem,
   MenubarSeparator,
+  MenubarSub,
+  MenubarSubContent,
+  MenubarSubTrigger,
   MenubarTrigger
 } from "./ui/menubar"
 import { useToast } from "./ui/use-toast"
@@ -47,6 +51,7 @@ export const Converter = () => {
   const previewContainerRef = useRef<HTMLDivElement>(null)
   const previewWrapRef = useRef<HTMLDivElement>(null)
   const [isPlus, setIsPlus] = useState<boolean>(null)
+  const [isDev, setIsDev] = useState<boolean>(null)
   const [open, setOpen] = useState(false)
   const [lookCss, setLookCss] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -86,6 +91,7 @@ export const Converter = () => {
   useEffect(() => {
     getUserInfo().then((user) => {
       setIsPlus(user.metadata?.plan_type === "plus")
+      setIsDev(["mitnickseng@gmail.com"].includes(user.email))
     })
   }, [open])
 
@@ -195,9 +201,26 @@ export const Converter = () => {
             </MenubarItem>
 
             <MenubarSeparator />
-            {/* <MenubarCheckboxItem checked={showMd} onCheckedChange={setShowMd}>
-              查看MD内容
-            </MenubarCheckboxItem> */}
+            {isDev && (
+              <MenubarSub>
+                <MenubarSubTrigger>实验室</MenubarSubTrigger>
+                <MenubarSubContent>
+                  <MenubarItem
+                    onClick={() => {
+                      console.log(mdContent)
+                    }}>
+                    查看MD内容
+                  </MenubarItem>
+                  <MenubarItem onClick={syncRecordValuesByPage}>
+                    新版生成
+                  </MenubarItem>
+                  <MenubarItem onClick={syncRecordValuesByPage}>
+                    微信支付
+                  </MenubarItem>
+                </MenubarSubContent>
+              </MenubarSub>
+            )}
+
             <MenubarCheckboxItem
               checked={linkToFoot}
               onCheckedChange={setLinkToFoot}>
