@@ -226,3 +226,10 @@ export function simulateKey(key) {
   }
 }
 
+export const getExtname = (pathname: string) => pathname.split(".").pop()
+
+export function sleep(time: number) {
+  return new Promise(function (resolve) {
+    setTimeout(resolve, time)
+  })
+}

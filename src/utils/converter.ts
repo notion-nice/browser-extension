@@ -1,6 +1,7 @@
 import juice from "juice"
 
 import { toast } from "~components/ui/use-toast"
+import { getExtname } from "~utility"
 
 import {
   BASIC_THEME_ID,
@@ -11,6 +12,7 @@ import {
   MARKDOWN_THEME_ID,
   SHADOW_HOST_ID
 } from "./constant"
+import { uploadFile } from "./cos"
 
 export async function copyTextToClipboard(text: string) {
   const htmlBlob = new Blob([text], { type: "text/html" })
@@ -48,11 +50,25 @@ export const solveWeChatMath = () => {
   }
 }
 
-export const solveHtml = () => {
+export const solveHtml = async () => {
   const shadowRoot = document.getElementById(SHADOW_HOST_ID)?.shadowRoot
   if (!shadowRoot) return
   const element = shadowRoot.getElementById(BOX_ID)
   if (!element) return
+  const imgEls = element.getElementsByTagName("img")
+  for (const imgEl of imgEls) {
+    const url = imgEl.src
+    const [pathname, search] = url.split("?")
+    const extname = getExtname(pathname)
+    if (!search) break
+    if (extname.length > 5) break
+    const searchParams = new URLSearchParams(search)
+    const blockId = searchParams.get("id")
+    const taskId = searchParams.get("taskId")
+    const ret = await uploadFile(taskId, { blockId, url, extname })
+    imgEl.src = ret.url
+  }
+
   const inner = element.children[0].children
   for (const item of inner) {
     item.setAttribute("data-tool", "NotionFlink Preview")

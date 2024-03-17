@@ -13,30 +13,52 @@ const COS_URL = process.env.PLASMO_PUBLIC_COS_HOST
 
 interface FileInfo {
   blockId: string
+  extname: string
   url: string
-  content: string
 }
 interface UploadFilesInfo {
   blockId: string
-  content: string
   file: File
+}
+
+export const uploadFile = async (taskId: string, oFile: FileInfo) => {
+  const { blockId, extname, url } = oFile
+  try {
+    const response = await fetch(url)
+    if (!response.ok) {
+      throw new Error("Failed to download file")
+    }
+    const blob = await response.blob()
+    const file = new File([blob], blockId)
+    const Key = `tmp/${taskId}/${blockId}.${extname}`
+    await cos.putObject({
+      Bucket: Bucket,
+      Region: Region,
+      Key,
+      Body: file
+    })
+    return { blockId, url: `${COS_URL}/${Key}` } as FileInfo
+  } catch (error) {
+    console.error(error)
+    return oFile
+  }
 }
 
 export const uploadFiles = async (pageId: string, files: FileInfo[]) => {
   try {
     const uploadFiles: UploadFilesInfo[] = []
 
-    for (const { blockId, content, url } of files) {
+    for (const { blockId, url } of files) {
       const response = await fetch(url)
       if (!response.ok) {
         throw new Error("Failed to download file")
       }
       const blob = await response.blob()
       const file = new File([blob], blockId)
-      uploadFiles.push({ blockId, content, file })
+      uploadFiles.push({ blockId, file })
     }
     const retFiles = await Promise.all(
-      uploadFiles.map(async ({ blockId, content, file }) => {
+      uploadFiles.map(async ({ blockId, file }) => {
         const Key = `tmp/${pageId}/${blockId}`
         await cos.putObject({
           Bucket: Bucket,
@@ -44,7 +66,7 @@ export const uploadFiles = async (pageId: string, files: FileInfo[]) => {
           Key,
           Body: file
         })
-        return { blockId, content, url: `${COS_URL}/${Key}` }
+        return { blockId, url: `${COS_URL}/${Key}` } as FileInfo
       })
     )
     return { ok: true, files: retFiles }

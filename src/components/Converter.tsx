@@ -6,6 +6,7 @@ import { sendToBackground } from "@plasmohq/messaging"
 
 import { cn } from "~lib/utils"
 import TEMPLATE from "~template"
+import { sleep } from "~utility"
 import {
   BOX_ID,
   LAYOUT_ID,
@@ -22,7 +23,7 @@ import {
   solveWeChatMath
 } from "~utils/converter"
 import { parserMarkdown, replaceStyle } from "~utils/helper"
-import { exportBlock, getUserInfo, HTMLToMD } from "~utils/notion"
+import { copyToWechat, exportBlock, getUserInfo, HTMLToMD } from "~utils/notion"
 
 import { Button } from "./ui/button"
 import {
@@ -96,7 +97,7 @@ export const Converter = () => {
     setLoading(true)
 
     try {
-      const { exportURL, pageId } = await exportBlock({
+      const { exportURL, pageId, taskId } = await exportBlock({
         exportType: "html",
         includeContents: "no_files"
       })
@@ -112,7 +113,7 @@ export const Converter = () => {
         return
       }
 
-      const md = await HTMLToMD(pageId, resp.html)
+      const md = await HTMLToMD(taskId, resp.html)
 
       setUrl(resp.url)
       setContent(md)
@@ -124,57 +125,16 @@ export const Converter = () => {
       setLoading(false)
     }
   }
-  // 旧版本的生成功能
-  // const onClick = async () => {
-  //   setLoading(true)
-  //   try {
-  //     const { exportURL, pageId } = await exportBlock({
-  //       exportType: "markdown"
-  //     })
-  //     const resp = await sendToBackground({
-  //       name: "converter",
-  //       body: { exportURL, pageId }
-  //     })
-  //     setLoading(false)
-  //     if (!resp.ok) {
-  //       console.error("exportBlock", resp.error)
-  //       toast({ variant: "destructive", description: resp.error })
-  //       return
-  //     }
-  //     const md = resp.md.replace(/\!\[Untitled\]\(/g, "![](")
-
-  //     setUrl(resp.url)
-  //     setContent(md)
-  //     setFootContent(parseLinkToFoot(md))
-  //   } catch (error) {
-  //     setLoading(false)
-  //     toast({ variant: "destructive", description: error.message })
-  //   }
-  // }
 
   const copyWechat = async () => {
     setCopying(true)
-    const shadowRoot = document.getElementById(SHADOW_HOST_ID)?.shadowRoot
-    if (!shadowRoot) {
-      setCopying(false)
-      return
-    }
-    const layout = shadowRoot.getElementById(LAYOUT_ID) // 保护现场
-    if (!layout) {
-      setCopying(false)
-      return
-    }
-    const html = layout.innerHTML
-    solveWeChatMath()
-    const cpoyHtml = solveHtml()
     try {
-      await copyTextToClipboard(cpoyHtml)
+      await copyToWechat()
+      await sleep(2 * 1000)
       toast({ description: "已复制，请到微信公众平台粘贴" })
     } catch (error) {
       toast({ variant: "destructive", description: "复制失败" })
     } finally {
-      layout.innerHTML = html // 恢复现场
-
       setCopying(false)
     }
   }
@@ -214,11 +174,12 @@ export const Converter = () => {
     <div
       ref={containerRef}
       className="nf-flex nf-relative nf-flex-col nf-gap-2 w-full nf-h-full nf-overflow-hidden">
-      {loading && (
-        <div className="nf-absolute nf-inset-0 nf-bg-black/20 nf-flex nf-justify-center">
+      {(loading || copying) && (
+        <div className="nf-absolute nf-inset-0 nf-z-50 nf-bg-black/20 nf-flex nf-justify-center">
           <ReloadIcon className="nf-mt-11 nf-h-4 nf-w-4 nf-animate-spin" />
         </div>
       )}
+
       <Menubar>
         <MenubarMenu>
           <MenubarTrigger>文件</MenubarTrigger>
@@ -288,11 +249,11 @@ export const Converter = () => {
         )}
       </Menubar>
 
-      {parseHtml && (
-        <div
-          id={BOX_ID}
-          ref={previewContainerRef}
-          className="nf-w-full nf-px-2 nf-flex-1 nf-overflow-y-auto">
+      <div
+        id={BOX_ID}
+        ref={previewContainerRef}
+        className="nf-w-full nf-relative nf-px-2 nf-flex-1 nf-overflow-y-auto">
+        {parseHtml ? (
           <section
             id={LAYOUT_ID}
             ref={previewWrapRef}
@@ -301,8 +262,14 @@ export const Converter = () => {
             data-website="https://notion.flink.top"
             dangerouslySetInnerHTML={{ __html: parseHtml }}
           />
-        </div>
-      )}
+        ) : (
+          !loading && (
+            <div className="nf-absolute nf-inset-0 nf-mt-6 nf-flex nf-justify-center">
+              <Button onClick={regenerate}>立刻生成</Button>
+            </div>
+          )
+        )}
+      </div>
 
       <Upgrade
         open={open}

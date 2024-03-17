@@ -4,7 +4,8 @@ import { v4 as uuid } from "uuid"
 
 import { sendToBackground } from "@plasmohq/messaging"
 
-import { uploadFiles } from "./cos"
+import { LAYOUT_ID, SHADOW_HOST_ID } from "./constant"
+import { copyTextToClipboard, solveHtml, solveWeChatMath } from "./converter"
 import sitdownConverter from "./sitdownConverter"
 
 type MapInfo = [AxiosInstance, string, string]
@@ -76,7 +77,7 @@ export const exportBlock = (options: ExportOptions) =>
     }
   })
 
-export const HTMLToMD = async (pageId: string, input: string) => {
+export const HTMLToMD = async (taskId: string, input: string) => {
   const user = await getUserInfo()
   const isPlus = user.metadata?.plan_type === "plus"
   // 创建一个DOMParser实例
@@ -95,14 +96,11 @@ export const HTMLToMD = async (pageId: string, input: string) => {
     })
 
   if (imgIds.length && isPlus) {
-    const files = await syncRecordValues(imgIds)
-    const ret = await uploadFiles(pageId, files)
-    if (ret.ok) {
-      ret.files.forEach(({ blockId, content, url }) => {
-        const imgEl = doc.getElementById(blockId)
-        imgEl.innerHTML = `<img src="${url}" alt="${content}">`
-      })
-    }
+    const map = await syncRecordValues(taskId, imgIds)
+    map.forEach(({ blockId, content, url }) => {
+      const imgEl = doc.getElementById(blockId)
+      imgEl.innerHTML = `<img src="${url}" alt="${content}">`
+    })
   }
 
   const equationIds = []
@@ -115,7 +113,7 @@ export const HTMLToMD = async (pageId: string, input: string) => {
     })
 
   if (equationIds.length) {
-    const map = await syncRecordValues(equationIds)
+    const map = await syncRecordValues(taskId, equationIds)
     map.forEach(({ blockId, content }) => {
       equationMap.push({ key: `[${blockId}](#)`, content })
     })
@@ -130,7 +128,7 @@ export const HTMLToMD = async (pageId: string, input: string) => {
       if (id) textEquationIds.push(id)
     })
   if (textEquationIds.length) {
-    const map = await syncRecordValues(textEquationIds)
+    const map = await syncRecordValues(taskId, textEquationIds)
     map.forEach(({ blockId, content, maps }) => {
       const el = doc.getElementById(blockId)
       el.innerHTML = `<p>${content}</p>`
@@ -151,6 +149,29 @@ export const HTMLToMD = async (pageId: string, input: string) => {
   })
 
   return md
+}
+
+export const copyToWechat = async () => {
+  const shadowRoot = document.getElementById(SHADOW_HOST_ID)?.shadowRoot
+  if (!shadowRoot) {
+    console.error("shadowRoot 不存在")
+    throw Error("复制失败")
+  }
+  const layout = shadowRoot.getElementById(LAYOUT_ID) // 保护现场
+  if (!layout) {
+    console.error("layout 不存在")
+    throw Error("复制失败")
+  }
+  const html = layout.innerHTML
+  solveWeChatMath()
+  const cpoyHtml = await solveHtml()
+  try {
+    await copyTextToClipboard(cpoyHtml)
+  } catch (error) {
+    throw Error("复制失败")
+  } finally {
+    layout.innerHTML = html // 恢复现场
+  }
 }
 
 export const getUserInfo = async () => {
@@ -225,7 +246,7 @@ const getParentElementId = (el: HTMLElement) => {
   return getParentElementId(el.parentElement)
 }
 
-const syncRecordValues = async (blockIds: string[]) => {
+const syncRecordValues = async (taskId: string, blockIds: string[]) => {
   const userId: string = Cookies.get("notion_user_id")
   const info = await getAxiosNotion()
   if (!info) {
@@ -277,7 +298,7 @@ const syncRecordValues = async (blockIds: string[]) => {
       switch (info.type) {
         case "image":
           if (!source) return
-          const url = `https://www.notion.so/image/${encodeURIComponent(source)}?table=block&id=${key}&spaceId=${spaceId}&width=480&userId=${userId}`
+          const url = `https://www.notion.so/image/${encodeURIComponent(source)}?table=block&id=${key}&spaceId=${spaceId}&width=480&userId=${userId}&taskId=${taskId}`
           return {
             blockId: key,
             url,
