@@ -1,5 +1,7 @@
 import COS from "cos-js-sdk-v5"
 
+import { sleep } from "~utility"
+
 const cos = new COS({
   SecretId: process.env.PLASMO_PUBLIC_COS_SECRETID,
   SecretKey: process.env.PLASMO_PUBLIC_COS_SECRETKEY
@@ -39,7 +41,12 @@ export const uploadFile = async (taskId: string, oFile: FileInfo) => {
     })
     const newUrl = `${COS_URL}/${Key}`
     // 新上传得图片，请求一下防止复制到公众号得时候失败
-    fetch(newUrl)
+    try {
+      await sleep(300)
+      await fetch(newUrl)
+    } catch (error) {
+      console.error(error)
+    }
     return { blockId, url: newUrl } as FileInfo
   } catch (error) {
     console.error(error)
