@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.6] - 2024-03-13
+
+### Added
+
+- 安装后打开引导网页
+
+### Changed
+
+- 优化图床功能
+
 ## [0.1.5] - 2024-03-13
 
 ### Changed

@@ -1,7 +1,7 @@
 {
   "name": "notion-nice",
   "displayName": "Notion Nice",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Format and distribute Notion content easily. Supports WeChat and more. Enhance your productivity.",
   "author": "SengMitnick. <sengmitnick@163.com>",
   "scripts": {
@@ -88,6 +88,8 @@
       "*://*.notion.site/*",
       "*://*.notion.so/*"
     ],
-    "permissions": []
+    "permissions": [
+      "tabs"
+    ]
   }
 }
