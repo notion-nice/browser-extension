@@ -181,6 +181,7 @@ export default `
   display: block;
   margin: 0 auto;
   max-width: 100%;
+  cursor: pointer;
 }
 
 #nice figure {
@@ -357,4 +358,4 @@ export default `
   line-height: 35px;
   z-index: 20;
 }
-`;
+`

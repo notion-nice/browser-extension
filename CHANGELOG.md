@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - 优化图床功能
+- 优化升级入口：点击图片弹窗
 
 ## [0.1.5] - 2024-03-13
 

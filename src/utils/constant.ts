@@ -1,3 +1,6 @@
+
+export const upgradeImgPath = chrome.runtime.getURL("assets/upgrade.png")
+
 // stays on doc change
 
 export const notionFrameCls = ".notion-frame"

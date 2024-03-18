@@ -4,7 +4,7 @@ import { v4 as uuid } from "uuid"
 
 import { sendToBackground } from "@plasmohq/messaging"
 
-import { LAYOUT_ID, SHADOW_HOST_ID } from "./constant"
+import { LAYOUT_ID, SHADOW_HOST_ID, upgradeImgPath } from "./constant"
 import { copyTextToClipboard, solveHtml, solveWeChatMath } from "./converter"
 import sitdownConverter from "./sitdownConverter"
 
@@ -25,8 +25,6 @@ type ExportOptions = {
 const notionClientVersion = "23.13.0.109"
 const pageMap = new Map<string, MapInfo>()
 const userMap = new Map<string, UserInfo>()
-
-const upgradeImgPath = chrome.runtime.getURL("assets/upgrade.png")
 
 export const exportBlock = (options: ExportOptions) =>
   new Promise<ExportBlockRet>(async (resolve, reason) => {

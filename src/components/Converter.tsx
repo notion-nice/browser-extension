@@ -14,7 +14,8 @@ import {
   SHADOW_HOST_ID,
   STYLE,
   TEMPLATE_NUM,
-  TEMPLATE_OPTIONS
+  TEMPLATE_OPTIONS,
+  upgradeImgPath
 } from "~utils/constant"
 import { parseLinkToFoot } from "~utils/converter"
 import { parserMarkdown, replaceStyle } from "~utils/helper"
@@ -87,6 +88,27 @@ export const Converter = () => {
       }
     }, 300)
   })
+
+  useEffect(() => {
+    const el = previewContainerRef.current
+    if (el) {
+      const onImgClick = (e: MouseEvent) => {
+        const target: Element = e.target as any
+        // 检查目标元素是否为图片元素
+        if (target.tagName.toLowerCase() === "img") {
+          const src = target.getAttribute("src")
+          if (src === upgradeImgPath) {
+            setOpen(true)
+          }
+        }
+      }
+      el.addEventListener("click", onImgClick)
+
+      return () => {
+        el?.removeEventListener("click", onImgClick)
+      }
+    }
+  }, [])
 
   useEffect(() => {
     getUserInfo().then((user) => {
