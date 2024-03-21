@@ -4,9 +4,15 @@ import { v4 as uuid } from "uuid"
 
 import { sendToBackground } from "@plasmohq/messaging"
 
-import { LAYOUT_ID, SHADOW_HOST_ID, upgradeImgPath } from "./constant"
+import {
+  LAYOUT_ID,
+  notionClientVersion,
+  SHADOW_HOST_ID,
+  upgradeImgPath
+} from "./constant"
 import { copyTextToClipboard, solveHtml, solveWeChatMath } from "./converter"
 import sitdownConverter from "./sitdownConverter"
+import { createCustomer, getPayment, prices } from "./stripe"
 
 type MapInfo = [AxiosInstance, string, string]
 type UserInfo = {
@@ -22,7 +28,6 @@ type ExportOptions = {
   includeContents?: "no_files"
 }
 
-const notionClientVersion = "23.13.0.109"
 const pageMap = new Map<string, MapInfo>()
 const userMap = new Map<string, UserInfo>()
 
@@ -183,13 +188,10 @@ export const getUserInfo = async () => {
     .post("/getSpaces")
     .then((r) => r.data?.[userId]?.notion_user?.[userId]?.value?.value)
 
-  const ret = await sendToBackground({
-    name: "customer",
-    body: {
-      userId: user.id,
-      email: user.email,
-      name: user.name
-    }
+  const ret = await createCustomer({
+    userId: user.id,
+    email: user.email,
+    name: user.name
   })
 
   if (ret.ok) {
@@ -207,7 +209,7 @@ export const getUserInfo = async () => {
 }
 
 export const getComboPrice = async () => {
-  const ret = await sendToBackground({ name: "prices" })
+  const ret = await prices()
   if (ret.ok) {
     return ret.price.unit_amount / 100
   }
@@ -217,10 +219,7 @@ export const getComboPrice = async () => {
 export const generatePaymentUrl = async () => {
   const user = await getUserInfo()
 
-  const ret = await sendToBackground({
-    name: "payment",
-    body: { userId: user.customerId }
-  })
+  const ret = await getPayment(user.customerId)
   if (!ret.ok) {
     if (ret.customer) {
       userMap.set(user.userId, {

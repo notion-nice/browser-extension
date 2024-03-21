@@ -1,21 +1,16 @@
-const baseURL = `${process.env.PLASMO_PUBLIC_STRIPE_HOST}/api/stripe`
+import axios from "axios"
 
-const _stripeFetch = async (url: string, options: any) => {
-  const response = await fetch(baseURL + url, options)
-  const json = await response.json()
-  return json
-}
-
-export const stripeFetch = {
-  post(url: string, data: any = {}, options: any = {}) {
-    return _stripeFetch(url, {
-      method: "POST",
-      body: JSON.stringify(data),
-      ...options,
-      headers: {
-        ...options.headers,
-        "Content-Type": "application/json"
-      }
-    })
+const axiosNotion = axios.create({
+  baseURL: `${process.env.PLASMO_PUBLIC_STRIPE_HOST}/api/stripe`,
+  headers: {
+    "Content-Type": "application/json"
   }
-}
+})
+
+export const createCustomer = (data: any) =>
+  axiosNotion.post(`/customer`, data).then((r) => r.data)
+
+export const getPayment = (userId: string) =>
+  axiosNotion.post(`/payment/${userId}`).then((r) => r.data)
+
+export const prices = () => axiosNotion.post(`/prices`).then((r) => r.data)

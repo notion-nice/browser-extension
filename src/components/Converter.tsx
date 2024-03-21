@@ -185,17 +185,8 @@ export const Converter = () => {
       setStyle(TEMPLATE.style[option.id])
     }
   }
-  const createBilling = async () => {
-    const user = await getUserInfo()
-
-    const ret = await sendToBackground({
-      name: "billing",
-      body: { userId: user.userId }
-    })
-    if (!ret.ok) {
-      throw Error(ret.error.message)
-    }
-    window.location.href = ret.url
+  const onBilling = async () => {
+    toast({ description: "功能开发中，敬请期待~" })
   }
 
   return (
@@ -282,7 +273,7 @@ export const Converter = () => {
           <MenubarTrigger>账户</MenubarTrigger>
           <MenubarContent portalProps={{ container: containerRef.current }}>
             <MenubarItem onClick={() => setOpen(true)}>查看套餐</MenubarItem>
-            <MenubarItem onClick={createBilling}>管理我的订阅</MenubarItem>
+            <MenubarItem onClick={onBilling}>管理我的订阅</MenubarItem>
           </MenubarContent>
         </MenubarMenu>
         <div className="nf-flex-1"></div>
