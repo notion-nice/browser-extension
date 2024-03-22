@@ -14,3 +14,7 @@ export const getPayment = (userId: string) =>
   axiosNotion.post(`/payment/${userId}`).then((r) => r.data)
 
 export const prices = () => axiosNotion.post(`/prices`).then((r) => r.data)
+
+
+export const getHtml = (data: any) =>
+  axiosNotion.post(`/html`, data).then((r) => r.data)
