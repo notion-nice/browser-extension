@@ -1,8 +1,9 @@
 import { useMount } from "ahooks"
 import React, { useState } from "react"
 
+import { getUserInfo } from "~lib/notion"
 import { getBaseInfo, type ComboInfo } from "~lib/stripe"
-import { generatePaymentUrl, getComboPrice, getUserInfo } from "~utils/notion"
+import { generatePaymentUrl, getComboPrice } from "~utils/notion"
 
 import { Button } from "./ui/button"
 import { Dialog, DialogContent, type DialogContentProps } from "./ui/dialog"

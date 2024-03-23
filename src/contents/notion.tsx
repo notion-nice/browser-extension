@@ -5,9 +5,9 @@ import { useEffect, useState } from "react"
 import { MenuFold, Panel } from "~components"
 import { ThemeContext, type ThemeType } from "~components/ThemeContext"
 import { Toaster } from "~components/ui/toaster"
+import { getUserInfo } from "~lib/notion"
 import { getElement, onElementLoaded } from "~utility"
 import { SHADOW_HOST_ID } from "~utils/constant"
-import { getUserInfo } from "~utils/notion"
 
 export const config: PlasmoCSConfig = {
   matches: ["https://www.notion.so/*"]

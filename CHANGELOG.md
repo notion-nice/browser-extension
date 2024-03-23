@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - 优化Plan文案内容
+- 优化Notion API调用逻辑
 
 ### Fixed
 

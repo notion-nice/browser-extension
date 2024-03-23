@@ -5,6 +5,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react"
 import { sendToBackground } from "@plasmohq/messaging"
 
 import { PlusIcon } from "~components/icon"
+import { getUserInfo } from "~lib/notion"
 import { cn } from "~lib/utils"
 import TEMPLATE from "~template"
 import { sleep } from "~utility"
@@ -23,7 +24,6 @@ import { parserMarkdown, replaceStyle } from "~utils/helper"
 import {
   copyToWechat,
   exportBlock,
-  getUserInfo,
   HTMLToMD,
   syncRecordValuesByPage
 } from "~utils/notion"
