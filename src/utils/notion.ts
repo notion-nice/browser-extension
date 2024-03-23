@@ -2,7 +2,7 @@ import axios, { type AxiosInstance } from "axios"
 import Cookies from "js-cookie"
 import { v4 as uuid } from "uuid"
 
-import { sendToBackground } from "@plasmohq/messaging"
+import { createCustomer, getPayment, prices } from "~lib/stripe"
 
 import {
   LAYOUT_ID,
@@ -12,7 +12,6 @@ import {
 } from "./constant"
 import { copyTextToClipboard, solveHtml, solveWeChatMath } from "./converter"
 import sitdownConverter from "./sitdownConverter"
-import { createCustomer, getPayment, prices } from "./stripe"
 
 type MapInfo = [AxiosInstance, string, string]
 type UserInfo = {

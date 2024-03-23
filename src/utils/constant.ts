@@ -1,5 +1,5 @@
 
-export const notionClientVersion = "23.13.0.109"
+export const notionClientVersion = "23.13.0.146"
 export const upgradeImgPath = chrome.runtime.getURL("assets/upgrade.png")
 
 // stays on doc change

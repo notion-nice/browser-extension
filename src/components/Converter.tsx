@@ -4,6 +4,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react"
 
 import { sendToBackground } from "@plasmohq/messaging"
 
+import { PlusIcon } from "~components/icon"
 import { cn } from "~lib/utils"
 import TEMPLATE from "~template"
 import { sleep } from "~utility"
@@ -43,7 +44,7 @@ import {
   MenubarTrigger
 } from "./ui/menubar"
 import { useToast } from "./ui/use-toast"
-import { PlusSvg, Upgrade } from "./Upgrade"
+import { Upgrade } from "./Upgrade"
 
 export const Converter = () => {
   const { toast } = useToast()
@@ -279,7 +280,7 @@ export const Converter = () => {
         <div className="nf-flex-1"></div>
         {isPlus !== null && !isPlus && (
           <Button variant="marked" onClick={() => setOpen(true)}>
-            {PlusSvg}
+            {PlusIcon}
             <span className="nf-ml-1">升级到Plus</span>
           </Button>
         )}
