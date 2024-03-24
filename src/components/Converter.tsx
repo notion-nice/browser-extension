@@ -5,6 +5,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react"
 import { sendToBackground } from "@plasmohq/messaging"
 
 import { PlusIcon } from "~components/icon"
+import { generateMarkdown } from "~lib/generate"
 import { getUserInfo } from "~lib/notion"
 import { cn } from "~lib/utils"
 import TEMPLATE from "~template"
@@ -13,7 +14,6 @@ import {
   BOX_ID,
   LAYOUT_ID,
   MARKDOWN_THEME_ID,
-  SHADOW_HOST_ID,
   STYLE,
   TEMPLATE_NUM,
   TEMPLATE_OPTIONS,
@@ -21,12 +21,7 @@ import {
 } from "~utils/constant"
 import { parseLinkToFoot } from "~utils/converter"
 import { parserMarkdown, replaceStyle } from "~utils/helper"
-import {
-  copyToWechat,
-  exportBlock,
-  HTMLToMD,
-  syncRecordValuesByPage
-} from "~utils/notion"
+import { copyToWechat, exportBlock, HTMLToMD } from "~utils/notion"
 
 import { Button } from "./ui/button"
 import {
@@ -154,6 +149,21 @@ export const Converter = () => {
       setLoading(false)
     }
   }
+  const newGenerate = async () => {
+    setLoading(true)
+
+    try {
+      const md = await generateMarkdown()
+
+      setContent(md)
+      setFootContent(parseLinkToFoot(md))
+      setLoading(false)
+    } catch (error) {
+      toast({ variant: "destructive", description: error.message })
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const copyWechat = async () => {
     setCopying(true)
@@ -225,12 +235,8 @@ export const Converter = () => {
                     }}>
                     查看MD内容
                   </MenubarItem>
-                  <MenubarItem onClick={syncRecordValuesByPage}>
-                    新版生成
-                  </MenubarItem>
-                  <MenubarItem onClick={syncRecordValuesByPage}>
-                    微信支付
-                  </MenubarItem>
+                  <MenubarItem onClick={newGenerate}>新版生成</MenubarItem>
+                  <MenubarItem onClick={newGenerate}>微信支付</MenubarItem>
                 </MenubarSubContent>
               </MenubarSub>
             )}

@@ -3,7 +3,6 @@ import Cookies from "js-cookie"
 import { v4 as uuid } from "uuid"
 
 import { getAxiosNotion, getUserInfo } from "~lib/notion"
-import { getPayment, prices } from "~lib/stripe"
 
 import { LAYOUT_ID, SHADOW_HOST_ID, upgradeImgPath } from "./constant"
 import { copyTextToClipboard, solveHtml, solveWeChatMath } from "./converter"
@@ -22,9 +21,6 @@ type ExportOptions = {
   exportType: "markdown" | "html"
   includeContents?: "no_files"
 }
-
-const pageMap = new Map<string, MapInfo>()
-const userMap = new Map<string, UserInfo>()
 
 export const exportBlock = (options: ExportOptions) =>
   new Promise<ExportBlockRet>(async (resolve, reason) => {
@@ -172,58 +168,12 @@ export const copyToWechat = async () => {
   }
 }
 
-export const getComboPrice = async () => {
-  const ret = await prices()
-  if (ret.ok) {
-    return ret.price.unit_amount / 100
-  }
-  return 0
-}
-
-export const generatePaymentUrl = async () => {
-  const user = await getUserInfo()
-
-  const ret = await getPayment(user.customerId)
-  if (!ret.ok) {
-    if (ret.customer) {
-      userMap.set(user.userId, {
-        ...user,
-        ...ret.customer,
-        userId: user.userId,
-        customerId: ret.customer.id
-      })
-      throw Error("你当前已经开通了会员，无需再次购买")
-    }
-    throw Error(ret.error.message)
-  }
-  return ret.url as string
-}
-
 const getParentElementId = (el: HTMLElement) => {
   if (!el.parentElement) return null
   if (el.parentElement?.id) {
     return el.parentElement.id
   }
   return getParentElementId(el.parentElement)
-}
-
-export const syncRecordValuesByPage = async () => {
-  const info = await getAxiosNotion()
-  if (!info) {
-    throw Error("The pageId does not exist in the current path")
-  }
-  const [axiosNotion, spaceId, pageId] = info
-  const ret = await axiosNotion
-    .post("/syncRecordValues", {
-      requests: [
-        {
-          pointer: { table: "block", id: pageId, spaceId },
-          version: -1
-        }
-      ]
-    })
-    .then((r) => r.data)
-  console.log("syncRecordValuesByPage", ret)
 }
 
 const syncRecordValues = async (taskId: string, blockIds: string[]) => {

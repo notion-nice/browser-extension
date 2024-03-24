@@ -30,7 +30,15 @@ export const createCustomer = (data: any) =>
 export const getPayment = (userId: string) =>
   axiosNotion.post(`/payment/${userId}`).then((r) => r.data)
 
-export const prices = () => axiosNotion.post(`/prices`).then((r) => r.data)
+const prices = () => axiosNotion.post(`/prices`).then((r) => r.data)
+
+export const getComboPrice = async () => {
+  const ret = await prices()
+  if (ret.ok) {
+    return ret.price.unit_amount / 100
+  }
+  return 0
+}
 
 export const getBaseInfo = async () => {
   if (comboMap && notionClientVersion) return { comboMap, notionClientVersion }

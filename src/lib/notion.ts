@@ -1,7 +1,7 @@
 import axios, { type AxiosInstance } from "axios"
 import Cookies from "js-cookie"
 
-import { createCustomer, getBaseInfo } from "./stripe"
+import { createCustomer, getBaseInfo, getPayment } from "./stripe"
 
 type MapInfo = [AxiosInstance, string, string]
 type UserInfo = {
@@ -63,6 +63,25 @@ export const getAxiosNotion = async () => {
   pageMap.set(pageId, [_axiosNotion, spaceId, pageId])
 
   return pageMap.get(pageId)
+}
+
+export const generatePaymentUrl = async () => {
+  const user = await getUserInfo()
+
+  const ret = await getPayment(user.customerId)
+  if (!ret.ok) {
+    if (ret.customer) {
+      userMap.set(user.userId, {
+        ...user,
+        ...ret.customer,
+        userId: user.userId,
+        customerId: ret.customer.id
+      })
+      throw Error("你当前已经开通了会员，无需再次购买")
+    }
+    throw Error(ret.error.message)
+  }
+  return ret.url as string
 }
 
 export const getUserInfo = async () => {
