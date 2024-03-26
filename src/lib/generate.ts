@@ -25,13 +25,14 @@ export const generateMarkdown = async () => {
 }
 
 export const blocksToMarkdown = async (contentIds: string[], blocks: any) => {
-  let md = ""
-  for (const id of contentIds) {
-    const block = blocks[id]?.value?.value
-    md += await blockToMarkdown(block)
-    md += "\n"
-  }
-  return md
+  const mds: string[] = await Promise.all(
+    contentIds.map(async (id) => {
+      const block = blocks[id]?.value?.value
+      const md = await blockToMarkdown(block)
+      return `${md}\n\n`
+    })
+  )
+  return mds.join("")
 }
 
 const getblockMap = async (contentIds: string[]) => {
@@ -148,9 +149,9 @@ const converterTodo = async (block: any) => {
   const title = titleToMarkdown(block.properties.title)
   const checked = titleToMarkdown(block.properties.checked) === "Yes"
   if (checked) {
-    return `[x] ${title}`
+    return `- [x] <s>${title}</s>`
   }
-  return `[ ] ${title}`
+  return `- [ ] ${title}`
 }
 
 const converterTable = async (block: any) => {

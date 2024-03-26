@@ -116,6 +116,9 @@ dependencies:
   markdown-it-table-of-contents:
     specifier: ^0.4.4
     version: 0.4.4
+  markdown-it-todo:
+    specifier: ^1.0.5
+    version: 1.0.5
   mathjax-full:
     specifier: ^3.2.2
     version: 3.2.2
@@ -6399,6 +6402,11 @@ packages:
   /markdown-it-table-of-contents@0.4.4:
     resolution: {integrity: sha512-TAIHTHPwa9+ltKvKPWulm/beozQU41Ab+FIefRaQV1NRnpzwcV9QOe6wXQS5WLivm5Q/nlo0rl6laGkMDZE7Gw==}
     engines: {node: '>6.4.0'}
+    dev: false
+
+  /markdown-it-todo@1.0.5:
+    resolution: {integrity: sha512-bHfAbwSGSYdi/iG7G5XLyalU4xwZIlZMsd3xf25FGbLkramaia0oydpXJP8HJzJbLCnbM1kdko/zqZJBS9pYrw==}
+    engines: {node: '>=4'}
     dev: false
 
   /markdown-it@8.4.2:
