@@ -1,5 +1,6 @@
 import axios from "axios"
 import MarkdownIt from "markdown-it"
+import markdownItTodo from "markdown-it-todo"
 import markdownItDeflist from "markdown-it-deflist"
 import markdownItImplicitFigures from "markdown-it-implicit-figures"
 import markdownItRuby from "markdown-it-ruby"
@@ -91,6 +92,7 @@ markdownParserWechat
   .use(markdownItSpan) // 在标题标签中添加span
   .use(markdownItRemovepre) // 移除代码段中的 pre code
   .use(markdownItMath) // 数学公式
+  .use(markdownItTodo)
   .use(markdownItLinkfoot) // 修改脚注
   .use(markdownItTableOfContents, {
     transformLink: () => "",
@@ -145,6 +147,7 @@ markdownParser
   .use(markdownItSpan) // 在标题标签中添加span
   .use(markdownItMath) // 数学公式
   .use(markdownItLinkfoot) // 修改脚注
+  .use(markdownItTodo)
   .use(markdownItTableOfContents, {
     transformLink: () => "",
     includeLevel: [2, 3],
