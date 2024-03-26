@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.1] - 2024-03-27
+
+### Changed
+
+- 排版引擎2.0上线，更快更强
+
 ## [0.1.8] - 2024-03-24
 
 ### Changed

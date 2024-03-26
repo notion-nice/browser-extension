@@ -1,8 +1,7 @@
 import { ReloadIcon } from "@radix-ui/react-icons"
 import { useLocalStorageState, useMount, useUpdate } from "ahooks"
 import React, { useEffect, useMemo, useRef, useState } from "react"
-
-import { sendToBackground } from "@plasmohq/messaging"
+import { v4 as uuid } from "uuid"
 
 import { PlusIcon } from "~components/icon"
 import { generateMarkdown } from "~lib/generate"
@@ -21,7 +20,7 @@ import {
 } from "~utils/constant"
 import { parseLinkToFoot } from "~utils/converter"
 import { parserMarkdown, replaceStyle } from "~utils/helper"
-import { copyToWechat, exportBlock, HTMLToMD } from "~utils/notion"
+import { copyToWechat } from "~utils/notion"
 
 import { Button } from "./ui/button"
 import {
@@ -121,39 +120,7 @@ export const Converter = () => {
     setLoading(true)
 
     try {
-      const { exportURL, pageId, taskId } = await exportBlock({
-        exportType: "html",
-        includeContents: "no_files"
-      })
-      const resp = await sendToBackground({
-        name: "html",
-        body: { exportURL, pageId }
-      })
-
-      if (!resp.ok) {
-        setLoading(false)
-        console.error("exportBlock", resp.error)
-        toast({ variant: "destructive", description: resp.error })
-        return
-      }
-
-      const md = await HTMLToMD(taskId, resp.html)
-
-      setUrl(resp.url)
-      setContent(md)
-      setFootContent(parseLinkToFoot(md))
-      setLoading(false)
-    } catch (error) {
-      toast({ variant: "destructive", description: error.message })
-    } finally {
-      setLoading(false)
-    }
-  }
-  const newGenerate = async () => {
-    setLoading(true)
-
-    try {
-      const md = await generateMarkdown()
+      const md = await generateMarkdown({ isPlus, preamble: 0, taskId: uuid() })
 
       setContent(md)
       setFootContent(parseLinkToFoot(md))
@@ -235,8 +202,7 @@ export const Converter = () => {
                     }}>
                     查看MD内容
                   </MenubarItem>
-                  <MenubarItem onClick={newGenerate}>新版生成</MenubarItem>
-                  <MenubarItem onClick={newGenerate}>微信支付</MenubarItem>
+                  <MenubarItem onClick={copyWechat}>微信支付</MenubarItem>
                 </MenubarSubContent>
               </MenubarSub>
             )}

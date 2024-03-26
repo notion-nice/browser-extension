@@ -1,17 +1,20 @@
 import MarkdownIt from "markdown-it"
 
+import { upgradeImgPath } from "~utils/constant"
 import highlightjs from "~utils/langHighlight"
 
 import { getAxiosNotion, getUserInfo } from "./notion"
 import { titleToMarkdown } from "./titleToMarkdown"
 
 interface Properties {
+  isPlus: boolean
+  taskId: string
   preamble: number
 }
 
 const markdownParser = new MarkdownIt()
 
-export const generateMarkdown = async () => {
+export const generateMarkdown = async (properties: Properties) => {
   const info = await getAxiosNotion()
   if (!info) {
     throw Error("The pageId does not exist in the current path")
@@ -31,7 +34,7 @@ export const generateMarkdown = async () => {
   const contentIds = page.content as string[]
   const blocks = await getblockMap(contentIds)
 
-  return blocksToMarkdown(contentIds, blocks, { preamble: 0 })
+  return blocksToMarkdown(contentIds, blocks, properties)
 }
 
 export const blocksToMarkdown = async (
@@ -355,7 +358,10 @@ const converterImage = async (block: any, properties: Properties) => {
   if (!source) return ""
   if (title === "Untitled") title = ""
   let content = ""
-  const url = `https://www.notion.so/image/${encodeURIComponent(source)}?table=block&id=${block.id}&spaceId=${block.space_id}&width=${block_width}&userId=${user.userId}`
+  let url = upgradeImgPath
+
+  if (properties.isPlus)
+    url = `https://www.notion.so/image/${encodeURIComponent(source)}?table=block&id=${block.id}&spaceId=${block.space_id}&width=${block_width}&userId=${user.userId}&taskId=${properties.taskId}`
 
   content += convertePreamble(properties)
   content += title
