@@ -37,7 +37,7 @@ export const generateMarkdown = async (properties: Properties) => {
   return blocksToMarkdown(contentIds, blocks, properties)
 }
 
-export const blocksToMarkdown = async (
+const blocksToMarkdown = async (
   contentIds: string[],
   blocks: any,
   properties: Properties
