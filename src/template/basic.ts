@@ -290,6 +290,10 @@ export default `
   -webkit-overflow-scrolling: touch;
 }
 
+#nice .MathJax {
+  display: inline-block;
+}
+
 #nice .block-equation svg {
   max-width: 300% !important;
   -webkit-overflow-scrolling: touch;
@@ -357,5 +361,15 @@ export default `
   color: white;
   line-height: 35px;
   z-index: 20;
+}
+
+#nice .column_list {
+  display: flex;
+  width: 100%;
+  overflow: hidden;
+}
+
+#nice .column {
+  overflow: auto;
 }
 `

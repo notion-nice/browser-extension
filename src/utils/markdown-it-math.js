@@ -207,7 +207,7 @@ export default (md, options) => {
     OutputJax: new SVG({ fontCache: "none", ...options?.svg })
   }
   const convertOptions = {
-    display: false
+    display: false,
   }
 
   // set KaTeX as the renderer for markdown-it-simplemath
