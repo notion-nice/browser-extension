@@ -354,11 +354,12 @@ const converterBookmark = async (block: any, properties: Properties) => {
 const converterImage = async (block: any, properties: Properties) => {
   const user = await getUserInfo()
   const format = block.format || {}
-  // const block_width = format.block_width || 640
+  let width = format.block_width || 640
   let title = titleToMarkdown(block.properties?.title)
   const source = format.display_source || block.properties?.source?.[0]?.[0]
   if (!source) return ""
   if (title === "Untitled") title = ""
+  if (typeof width === "number") width = `${width}px`
   let content = ""
   let url = upgradeImgPath
 
@@ -381,8 +382,8 @@ const converterImage = async (block: any, properties: Properties) => {
 
   content += convertePreamble(properties)
   content += title
-    ? `<figure><img src="${url}" alt="${title}"><figcaption>${title}</figcaption></figure>`
-    : `<figure><img src="${url}" alt=""></figure>`
+    ? `<figure><img width="${width}" src="${url}" alt="${title}"><figcaption>${title}</figcaption></figure>`
+    : `<figure><img width="${width}" src="${url}" alt=""></figure>`
 
   return content
 }

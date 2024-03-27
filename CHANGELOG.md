@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.2] - 2024-03-28
+
+### Changed
+
+- 图片支持宽度，与Notion文章同步，最大100%
+
+### Fixed
+
+- 图片失真问题
+
 ## [0.2.1] - 2024-03-27
 
 ### Changed
