@@ -1,6 +1,8 @@
 import MarkdownIt from "markdown-it"
 
+import { getExtname } from "~utility"
 import { upgradeImgPath } from "~utils/constant"
+import { uploadFile } from "~utils/cos"
 import highlightjs from "~utils/langHighlight"
 
 import { getAxiosNotion, getUserInfo } from "./notion"
@@ -360,8 +362,22 @@ const converterImage = async (block: any, properties: Properties) => {
   let content = ""
   let url = upgradeImgPath
 
-  if (properties.isPlus)
+  if (properties.isPlus) {
     url = `https://www.notion.so/image/${encodeURIComponent(source)}?table=block&id=${block.id}&spaceId=${block.space_id}&width=${block_width}&userId=${user.userId}&taskId=${properties.taskId}`
+    try {
+      const [pathname] = url.split("?")
+      const extname = getExtname(pathname)
+
+      const ret = await uploadFile(properties.taskId, {
+        blockId: block.id,
+        url,
+        extname
+      })
+      url = ret.url
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
   content += convertePreamble(properties)
   content += title
@@ -372,9 +388,10 @@ const converterImage = async (block: any, properties: Properties) => {
 }
 
 const converterCallout = async (block: any, properties: Properties) => {
-  const format = block.format || {}
+  // const format = block.format || {}
   const title = titleToMarkdown(block.properties?.title)
-  return `${convertePreamble(properties)}<blockquote>${format.page_icon} ${title}</blockquote>`
+  // return `${convertePreamble(properties)}<blockquote>${format.page_icon} ${title}</blockquote>`
+  return `${convertePreamble(properties)}<blockquote>${title}</blockquote>`
 }
 
 const converterCode = async (block: any, properties: Properties) => {

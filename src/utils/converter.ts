@@ -65,6 +65,8 @@ export const solveHtml = async () => {
     const searchParams = new URLSearchParams(search)
     const blockId = searchParams.get("id")
     const taskId = searchParams.get("taskId")
+    if (!taskId) break
+    if (!blockId) break
     const ret = await uploadFile(taskId, { blockId, url, extname })
     imgEl.src = ret.url
   }
