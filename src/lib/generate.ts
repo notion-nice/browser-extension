@@ -354,7 +354,7 @@ const converterBookmark = async (block: any, properties: Properties) => {
 const converterImage = async (block: any, properties: Properties) => {
   const user = await getUserInfo()
   const format = block.format || {}
-  const block_width = format.block_width || 640
+  // const block_width = format.block_width || 640
   let title = titleToMarkdown(block.properties?.title)
   const source = format.display_source || block.properties?.source?.[0]?.[0]
   if (!source) return ""
@@ -363,7 +363,7 @@ const converterImage = async (block: any, properties: Properties) => {
   let url = upgradeImgPath
 
   if (properties.isPlus) {
-    url = `https://www.notion.so/image/${encodeURIComponent(source)}?table=block&id=${block.id}&spaceId=${block.space_id}&width=${block_width}&userId=${user.userId}&taskId=${properties.taskId}`
+    url = `https://www.notion.so/image/${encodeURIComponent(source)}?table=block&id=${block.id}&spaceId=${block.space_id}&userId=${user.userId}&taskId=${properties.taskId}`
     try {
       const [pathname] = url.split("?")
       const extname = getExtname(pathname)
