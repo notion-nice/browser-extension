@@ -2,7 +2,7 @@ export const upgradeImgPath = chrome.runtime.getURL("assets/upgrade.png")
 
 // stays on doc change
 
-export const notionFrameCls = ".notion-frame"
+export const notionFrameCls = ".notion-frame >div"
 export const outlineFrameCls = ".nb-outline"
 
 // these gets removed on doc change

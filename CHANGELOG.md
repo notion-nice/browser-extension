@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - 图片失真问题
+- TOC不显示问题
 
 ## [0.2.1] - 2024-03-27
 

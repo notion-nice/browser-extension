@@ -25,7 +25,7 @@ let pageChangeObserverObj: MutationObserver | null = null
 let docEditObserverObj: MutationObserver | null = null
 
 // ENABLE/DISABLE Console Logs
-const DEBUG = false
+const DEBUG = true
 
 // keep classes in hierarchy of DOM
 
