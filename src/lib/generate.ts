@@ -324,10 +324,10 @@ const converterPage = async (block: any, properties: Properties) => {
   let link: string = block.id || ""
   link = link.split("-").join("")
   const title = titleToMarkdown(block.properties?.title)
-  const icon = block.format?.page_icon || ""
+  // const icon = block.format?.page_icon || ""
   if (!link) return ""
 
-  return `${convertePreamble(properties)}[${icon} ${title}](https://www.notion.so/${link})`
+  return `${convertePreamble(properties)}[${title}](https://www.notion.so/${link})`
 }
 
 const converterBulletedList = async (block: any, properties: Properties) => {
@@ -347,8 +347,8 @@ const converterBulletedList = async (block: any, properties: Properties) => {
 const converterBookmark = async (block: any, properties: Properties) => {
   const link = titleToMarkdown(block.properties?.link)
   const title = titleToMarkdown(block.properties?.title)
-  const icon = block.format?.bookmark_icon || ""
-  return `${convertePreamble(properties)}[${icon} ${title}](${link})`
+  // const icon = block.format?.bookmark_icon || ""
+  return `${convertePreamble(properties)}[${title}](${link})`
 }
 
 const converterImage = async (block: any, properties: Properties) => {
@@ -391,7 +391,6 @@ const converterImage = async (block: any, properties: Properties) => {
 const converterCallout = async (block: any, properties: Properties) => {
   // const format = block.format || {}
   const title = titleToMarkdown(block.properties?.title)
-  // return `${convertePreamble(properties)}<blockquote>${format.page_icon} ${title}</blockquote>`
   return `${convertePreamble(properties)}<blockquote>${title}</blockquote>`
 }
 
