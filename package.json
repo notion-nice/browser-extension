@@ -89,8 +89,6 @@
       "*://*.notion.site/*",
       "*://*.notion.so/*"
     ],
-    "permissions": [
-      "tabs"
-    ]
+    "permissions": []
   }
 }
